@@ -11,15 +11,14 @@ dotenv.config();
 
 const startServer = async () => {
     const app:any = express();
-    const httpServer = createServer(app); // Create an HTTP server
+    const httpServer = createServer(app); 
     const io = new SocketIOServer(httpServer, {
         cors: {
-            origin: "*", // Adjust according to your frontend URL
+            origin: "*", 
             methods: ["GET", "POST"],
         },
     });
 
-    // Handle WebSocket connection
     io.on("connection", (socket) => {
         console.log("A user connected:", socket.id);
 
@@ -32,7 +31,7 @@ const startServer = async () => {
 
     const server = new ApolloServer({
         schema,
-        introspection: true,  // Enable introspection
+        introspection: true, 
         context: ({ req }) => {
             const token = req.headers.authorization || "";
 
@@ -52,9 +51,9 @@ const startServer = async () => {
     await server.start();
     server.applyMiddleware({ app });
 
-    const port = process.env.PORT || 4000;
-    httpServer.listen(port, () => {
-        console.log(`Server running on port ${port}`);
+    const PORT = 4000;
+    httpServer.listen(PORT, () => {
+        console.log(`Server started on http://localhost:${PORT}/graphql`);
     });
 };
 

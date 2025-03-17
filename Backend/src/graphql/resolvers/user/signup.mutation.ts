@@ -23,5 +23,3 @@ export default class SignupResolver {
 }
 
 
-
-//om this code is hacked 

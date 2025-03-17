@@ -23,4 +23,3 @@ export default class UserResolver {
     }
 }
 
-//om this code is hacked 
