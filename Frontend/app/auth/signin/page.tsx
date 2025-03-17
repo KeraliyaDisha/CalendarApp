@@ -43,13 +43,11 @@ const Login: React.FC = () => {
 
   const onSubmit = async (formData: signin) => {
     try {
-      console.log("Login Data:", formData);
       const response = await signin({
         variables: { email: formData.email, password: formData.password },
       });
 
       if (response.data) {
-        console.log("Login Response:", response.data.signin.token);
         Cookies.set("token", response.data.signin.token, {
           secure: true,
           sameSite: "strict",
@@ -82,6 +80,8 @@ const Login: React.FC = () => {
         <Image
           src="/image_login.svg"
           alt="Login Illustration"
+          width={500}
+          height={500}
           className="w-full h-full object-cover"
         />
       </motion.div>

@@ -77,6 +77,8 @@ const Signup: React.FC = () => {
         <Image
           src="/image_signup.svg"
           alt="Signup Illustration"
+          width={500}
+          height={500}
           className="w-full h-full object-cover"
         />
       </motion.div>
