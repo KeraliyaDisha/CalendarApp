@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { handleEventLogout } from "../../../hooks/logout";
+import { handleEventLogout } from "../../hooks/logout";
 import { DELETE_EVENT } from "@/graphql/mutations";
 import { useEffect, useContext } from "react";
 import { SocketContext } from "@/app/layout"; // Import Socket.io Context

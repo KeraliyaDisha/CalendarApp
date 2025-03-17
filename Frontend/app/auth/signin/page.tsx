@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useEffect } from "react";
-import {signin } from "../../../types/types"
+import Image from "next/image";
+import {signin } from "../../../types"
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <img
+        <Image
           src="/image_login.svg"
           alt="Login Illustration"
           className="w-full h-full object-cover"

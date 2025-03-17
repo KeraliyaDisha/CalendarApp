@@ -3,17 +3,17 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import multiMonthPlugin from "@fullcalendar/multimonth";
-import { handleSelect } from "../../../hooks/Select";
-import { handleDateClick } from "../../../hooks/dateClick";
-import { handleEventClick } from "../../../hooks/eventClick";
-import { handleEventDrop } from "../../../hooks/eventDrop";
-import { handleEventResize } from "../../../hooks/eventResize";
+import { handleSelect } from "../../hooks/Select";
+import { handleDateClick } from "../../hooks/dateClick";
+import { handleEventClick } from "../../hooks/eventClick";
+import { handleEventDrop } from "../../hooks/eventDrop";
+import { handleEventResize } from "../../hooks/eventResize";
 import { festivals } from "@/festival";
 import { useMutation } from "@apollo/client";
 import { UPDATE_EVENT } from "@/graphql/mutations";
-import { cellStyle } from "../../../hooks/cellStyle";
+import { cellStyle } from "../../hooks/cellStyle";
 import { useEffect, useRef, useContext } from "react";
-import { SocketContext } from "@/app/layout"; // Import Socket.io Context
+import { SocketContext } from "@/app/layout";
 
 export default function Calendar({
   events,
@@ -25,9 +25,8 @@ export default function Calendar({
 }: any) {
   const calendarRef = useRef<FullCalendar | null>(null);
   const [updateEvent] = useMutation(UPDATE_EVENT);
-  const socket = useContext(SocketContext); // Get Socket.io instance
+  const socket = useContext(SocketContext); 
 
-  // Effect to handle navigation via `gotoDate`
   useEffect(() => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
@@ -39,23 +38,22 @@ export default function Calendar({
     }
   }, [setGotoDate]);
 
-  // Listen for real-time updates from Socket.io
   useEffect(() => {
     if (!socket) return;
 
     socket.on("newEvent", (event) => {
       console.log("New event received via Socket.io:", event);
-      refetch(); // Refresh events
+      refetch();
     });
 
     socket.on("updateEvent", (event) => {
       console.log("Event updated via Socket.io:", event);
-      refetch(); // Refresh events
+      refetch(); 
     });
 
     socket.on("deleteEvent", (event) => {
       console.log("Event deleted via Socket.io:", event);
-      refetch(); // Refresh events
+      refetch(); 
     });
 
     return () => {
@@ -67,7 +65,7 @@ export default function Calendar({
 
   return (
     <FullCalendar
-      ref={calendarRef} // Attach the ref
+      ref={calendarRef}
       plugins={[
         dayGridPlugin,
         interactionPlugin,

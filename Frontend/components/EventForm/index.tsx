@@ -1,8 +1,8 @@
 "use client";
 import { useMutation } from "@apollo/client";
-import { handleEventDelete } from "../../../hooks/eventDelete";
-import { handleSubmit } from "../../../hooks/submit";
-import { handleUpdate } from "../../../hooks/update";
+import { handleEventDelete } from "../../hooks/eventDelete";
+import { handleSubmit } from "../../hooks/submit";
+import { handleUpdate } from "../../hooks/update";
 import {
   CREATE_EVENT,
   DELETE_EVENT,

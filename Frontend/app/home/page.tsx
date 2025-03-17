@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
-import { event } from "@/types/types";
+import { event } from "@/types";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/graphql/queries";
 import { useRouter } from "next/navigation";
-import Calendar from "./components/calendar";
-import EventList from "./components/eventList";
-import Form from "./components/form";
-import { SocketContext } from "@/app/layout"; // Import SocketContext
+import Calendar from "../../components/Calendar";
+import EventList from "../../components/EventList";
+import Form from "../../components/EventForm";
+import { SocketContext } from "@/app/layout"; 
 
 export default function CalendarPage() {
   const { data, loading, error, refetch } = useQuery(GET_USER);
   const router = useRouter();
-  const socket = useContext(SocketContext); // Get Socket.io instance
+  const socket = useContext(SocketContext); 
 
   const [formData, setFormData] = useState<event>({
     title: "",
@@ -27,23 +27,22 @@ export default function CalendarPage() {
     () => () => {}
   );
 
-  // Listen for real-time updates from Socket.io
   useEffect(() => {
     if (!socket) return;
 
     socket.on("newEvent", () => {
       console.log("New event received via Socket.io");
-      refetch(); // Refresh events
+      refetch(); 
     });
 
     socket.on("updateEvent", () => {
       console.log("Event updated via Socket.io");
-      refetch(); // Refresh events
+      refetch();
     });
 
     socket.on("deleteEvent", () => {
       console.log("Event deleted via Socket.io");
-      refetch(); // Refresh events
+      refetch(); 
     });
 
     return () => {

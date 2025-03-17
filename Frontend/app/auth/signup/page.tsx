@@ -1,18 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { signup } from "@/types/types";
+import Image from "next/image";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { SIGNUP } from "@/graphql/mutations";
-import Link from "next/link";
+import { signup } from "@/types";
+import Cookies from "js-cookie";
 import { EyeIcon, EyeOffIcon, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 
-// Animation Variants (staggered entrance)
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -75,7 +74,7 @@ const Signup: React.FC = () => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <img
+        <Image
           src="/image_signup.svg"
           alt="Signup Illustration"
           className="w-full h-full object-cover"
