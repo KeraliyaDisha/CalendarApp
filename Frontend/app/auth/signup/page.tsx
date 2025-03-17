@@ -60,7 +60,7 @@ const Signup: React.FC = () => {
   useEffect(() => {
     if (successMessage) {
       setTimeout(() => {
-        router.push("/protected/home");
+        router.push("/home");
       }, 0);
     }
   }, [successMessage, router]);

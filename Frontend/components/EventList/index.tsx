@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@apollo/client";
 import { handleEventLogout } from "../../hooks/logout";
 import { DELETE_EVENT } from "@/graphql/mutations";
