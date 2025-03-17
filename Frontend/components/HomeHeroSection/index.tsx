@@ -12,17 +12,22 @@ const HeroSection = () => {
           A smart calendar platform for effortless personal and professional
           scheduling. Manage your events with a simple, real-time solution.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-6">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          {/* Get Started Button with Hover Effects */}
           <a
             href="/auth/signin"
-            className="group flex items-center justify-center gap-3 bg-white text-teal-600 px-8 py-4 rounded-full hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="group flex items-center justify-center gap-3 bg-white text-teal-600 px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl 
+            hover:bg-teal-100 hover:scale-105"
           >
             Get Started
-            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
           </a>
+
+          {/* About Us Button with Hover Effects */}
           <a
             href="/aboutus"
-            className="flex items-center justify-center gap-3 bg-teal-700/30 text-white px-8 py-4 rounded-full hover:bg-teal-700/40 transition-all duration-300 backdrop-blur-sm"
+            className="flex items-center justify-center gap-2 bg-teal-700/30 text-white px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-sm 
+            hover:bg-teal-700/50 hover:scale-105 hover:shadow-lg border-white border"
           >
             About Us
           </a>

@@ -1,61 +1,100 @@
-import React from "react";
+"use client";
 
-const teamMembers = [{ name: "Nish Patel" }];
+import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 const AboutUs: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
-      <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          About Us
-        </h2>
-        <p className="text-gray-600 text-center mb-6">
-          Welcome to{" "}
-          <span className="text-[#00b5b8] font-semibold">Calendo</span>, where
-          organization meets innovation. Our mission is to revolutionize the way
-          individuals and businesses manage their time, providing an intuitive
-          and powerful calendar solution that enhances productivity and
-          collaboration.
-        </p>
+    <motion.div
+      className="flex items-center justify-center min-h-screen bg-gray-100 p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <div className="w-full max-w-3xl p-8 bg-white rounded-lg shadow-lg">
+        {/* Header */}
+        <motion.h2
+          className="text-4xl font-bold text-center text-gray-800 mb-6"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          About <span className="text-teal-800">Calendo</span>
+        </motion.h2>
 
-        <h3 className="text-xl font-semibold text-gray-700 mt-6">
-          Meet Our Team
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center text-center bg-gray-50 p-4 rounded-lg shadow-md"
+        {/* Project Description */}
+        <motion.p
+          className="text-gray-600 text-center mb-6 leading-relaxed"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <span className="text-teal-800 font-semibold">Calendo</span> is a
+          modern calendar and scheduling platform designed to streamline event
+          management and improve productivity. Whether you&apos;re an individual or a
+          business, Calendo makes organizing your time effortless with powerful,
+          real-time scheduling tools.
+        </motion.p>
+
+        {/* Features Section */}
+        <motion.div
+          className="mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          <h3 className="text-2xl font-semibold text-gray-700 text-center mb-4">
+            Why Choose Calendo?
+          </h3>
+          <ul className="list-disc list-inside text-gray-600 space-y-2 px-4">
+            <li>
+              📅 <strong>Smart Scheduling</strong> – Easily create, update, and
+              manage events.
+            </li>
+            <li>🔄 <strong>Real-Time Updates</strong> – Instant synchronization across all devices.</li>
+            <li>🤝 <strong>Collaboration</strong> – Share schedules and coordinate with teams.</li>
+            <li>📊 <strong>Insights & Analytics</strong> – Get reports on time management.</li>
+            <li>🖥️ <strong>Multi-Platform</strong> – Accessible on web and mobile.</li>
+          </ul>
+        </motion.div>
+
+        {/* Contact Section */}
+        <motion.div
+          className="text-center mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          <h3 className="text-2xl font-semibold text-gray-700">Get in Touch</h3>
+          <p className="text-gray-600 mt-2">
+            Have questions or feedback? Contact us at{" "}
+            <a
+              href="mailto:support@calendo.com"
+              className="text-[#00b5b8] font-medium underline underline-offset-2 hover:text-teal-800 transition"
             >
-              <h4 className="mt-3 text-lg font-semibold text-gray-800">
-                {member.name}
-              </h4>
-            </div>
-          ))}
-        </div>
+              support@calendo.com
+            </a>
+            .
+          </p>
+        </motion.div>
 
-        <h3 className="text-xl font-semibold text-gray-700 mt-6">Contact Us</h3>
-        <p className="text-gray-600 mt-2">
-          Have questions? Reach out to us at{" "}
-          <a
-            href="mailto:support@calendo.com"
-            className="text-[#00b5b8] font-medium underline"
-          >
-            support@techifive.com
-          </a>
-          .
-        </p>
-
-        <div className="text-center mt-6">
-          <a
+        {/* Back to Home Button */}
+        <motion.div
+          className="text-center mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <Link
             href="/"
-            className="inline-block px-6 py-2 text-white bg-[#00b5b8] rounded-lg hover:bg-[#369A9A] transition"
+            className="inline-block px-6 py-3 text-white bg-teal-800 rounded-lg hover:bg-teal-700 transition-all transform hover:scale-105"
           >
             Back to Home
-          </a>
-        </div>
+          </Link>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
