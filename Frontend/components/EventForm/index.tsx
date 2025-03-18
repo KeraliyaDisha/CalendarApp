@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useMutation } from "@apollo/client";
-import { handleEventDelete } from "../../hooks/eventDelete";
 import { handleSubmit } from "../../hooks/submit";
 import { handleUpdate } from "../../hooks/update";
 import {
   CREATE_EVENT,
-  DELETE_EVENT,
   UPDATE_EVENT,
 } from "@/graphql/mutations";
 import { useContext } from "react";
@@ -22,7 +20,6 @@ export default function Form({
 }: any) {
   const [updateEvent] = useMutation(UPDATE_EVENT);
   const [createEvent] = useMutation(CREATE_EVENT);
-  const [deleteEvent] = useMutation(DELETE_EVENT);
   const socket = useContext(SocketContext); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,38 +57,38 @@ export default function Form({
                 if (newEvent) socket?.emit("newEvent", newEvent); 
               }
         }
-        className="mt-4 space-y-4 flex-1"
+        className="mt-4 space-y-3 flex-1"
       >
         <input
           type="text"
           name="title"
-          placeholder="Event Title"
+          placeholder="Title"
           value={formData.title}
           onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200"
         />
         <input
           type="text"
           name="description"
-          placeholder="Event Description"
+          placeholder="Description"
           value={formData.description}
           onChange={handleInputChange}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200"
         />
-        <div className="flex space-x-">
+        <div className="flex space-x-1">
           <input
             type="datetime-local"
             name="start"
             value={formData.start}
             onChange={handleInputChange}
-            className="w-1/2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+            className="w-1/2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200"
           />
           <input
             type="datetime-local"
             name="end"
             value={formData.end}
             onChange={handleInputChange}
-            className="w-1/2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+            className="w-1/2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200"
           />
         </div>
 
@@ -113,32 +110,15 @@ export default function Form({
 
                 if (updatedEvent) socket?.emit("updateEvent", updatedEvent); 
               }}
-              className="w-full bg-blue-600 text-white p-2 rounded-lg mt-4 hover:bg-blue-700 focus:outline-none transition duration-200"
+              className="w-full bg-gray-600 text-white p-2 rounded-lg mt-4 hover:bg-gray-700 focus:outline-none transition duration-200"
             >
               Update Event
-            </button>
-            <button
-              type="button"
-              onClick={async () => {
-                await handleEventDelete(
-                  deleteEvent,
-                  selectedEvent,
-                  setSelectedEvent,
-                  setFormData,
-                  refetch,
-                  socket
-                );
-                socket?.emit("deleteEvent", { id: selectedEvent.id }); 
-              }}
-              className="w-full bg-red-600 text-white p-2 rounded-lg mt-2 hover:bg-red-700 focus:outline-none transition duration-200"
-            >
-              Delete Event
             </button>
           </>
         ) : (
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-lg mt-4 hover:bg-blue-700 focus:outline-none transition duration-200"
+            className="w-full bg-gray-600 text-white p-2 rounded-lg mt-4 hover:bg-gray-700 focus:outline-none transition duration-200"
           >
             Add Event
           </button>
