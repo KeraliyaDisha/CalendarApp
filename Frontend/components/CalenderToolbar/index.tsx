@@ -57,7 +57,7 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
           {showDropdown && (
             <div
               className="origin-top-left absolute left-0 mt-2 w-32 
-                         rounded-md shadow-lg bg-white ring-1 
+                         rounded-md shadow-lg bg-[#F5F5F5] ring-1 
                          ring-black ring-opacity-5 z-50"
             >
               <div className="py-1">

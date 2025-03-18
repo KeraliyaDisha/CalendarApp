@@ -41,7 +41,7 @@ export default function UserProfileMenu({ onLogout }: UserMenuProps) {
 
       {/* Dropdown Menu */}
       {open && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-[#F5F5F5] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
           {/* User Information */}
           <div className="px-4 py-3">
             <p className="text-sm font-medium text-gray-900">{user.firstName}</p>
