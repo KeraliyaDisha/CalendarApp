@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import { useEffect, useRef, useContext, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { handleEventLogout } from "@/hooks/logout";
 import FullCalendar from "@fullcalendar/react";
+import { Clipboard, Copy, Scissors, Trash2 } from "lucide-react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -30,6 +32,8 @@ export default function Calendar({
 }: any) {
   const calendarRef = useRef<FullCalendar | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   const [updateEvent] = useMutation(UPDATE_EVENT);
   const socket = useContext(SocketContext);
@@ -37,11 +41,21 @@ export default function Calendar({
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentViewLabel, setCurrentViewLabel] = useState("Month");
   const [currentTitle, setCurrentTitle] = useState("");
-  const router = useRouter();
 
+  // Context Menu State
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    eventId: null,
+  });
+
+  // Logout Handler
   const handleLogout = () => {
-    handleEventLogout(router); 
+    handleEventLogout(router);
   };
+
+  // Close Dropdown on Click Outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -57,10 +71,21 @@ export default function Calendar({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showDropdown]);
-
-  const toggleDropdown = () => {
-    setShowDropdown((prev) => !prev);
-  };
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        contextMenu.visible &&
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(event.target as Node)
+      ) {
+        setContextMenu({ ...contextMenu, visible: false });
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [contextMenu]);
 
   const handleViewChange = (viewName: string) => {
     if (!calendarRef.current) return;
@@ -69,20 +94,9 @@ export default function Calendar({
     setShowDropdown(false);
   };
 
-  const handlePrev = () => {
-    if (!calendarRef.current) return;
-    calendarRef.current.getApi().prev();
-  };
-
-  const handleNext = () => {
-    if (!calendarRef.current) return;
-    calendarRef.current.getApi().next();
-  };
-
-  const handleToday = () => {
-    if (!calendarRef.current) return;
-    calendarRef.current.getApi().today();
-  };
+  const handlePrev = () => calendarRef.current?.getApi().prev();
+  const handleNext = () => calendarRef.current?.getApi().next();
+  const handleToday = () => calendarRef.current?.getApi().today();
 
   useEffect(() => {
     if (calendarRef.current) {
@@ -125,6 +139,17 @@ export default function Calendar({
         setCurrentViewLabel("Month");
     }
   };
+
+  const handleEventRightClick = (eventInfo: any, e: any) => {
+    e.preventDefault();
+    setContextMenu({
+      visible: true,
+      x: e.clientX,
+      y: e.clientY,
+      eventId: eventInfo.event.id,
+    });
+  };
+
   return (
     <div className="w-full h-full">
       {/* Custom Toolbar */}
@@ -132,12 +157,12 @@ export default function Calendar({
         currentViewLabel={currentViewLabel}
         currentTitle={currentTitle}
         showDropdown={showDropdown}
-        toggleDropdown={toggleDropdown}
+        toggleDropdown={() => setShowDropdown(!showDropdown)}
         handleViewChange={handleViewChange}
         handlePrev={handlePrev}
         handleNext={handleNext}
         handleToday={handleToday}
-        onLogout={handleLogout} 
+        onLogout={handleLogout}
       />
 
       {/* FullCalendar Component */}
@@ -166,12 +191,60 @@ export default function Calendar({
         eventDrop={(eventDropInfo) =>
           handleEventDrop(eventDropInfo, updateEvent, refetch, socket)
         }
-        dateClick={(info) => handleDateClick(info, setFormData, setSelectedEvent)}
+        dateClick={(info) =>
+          handleDateClick(info, setFormData, setSelectedEvent)
+        }
         select={(info) => handleSelect(info, setFormData)}
         eventResize={(eventResizeInfo) =>
           handleEventResize(eventResizeInfo, updateEvent, refetch, socket)
         }
+        eventDidMount={(info) => {
+          info.el.addEventListener("contextmenu", (e) =>
+            handleEventRightClick(info, e)
+          );
+        }}
       />
+
+      {/* Context Menu */}
+      {contextMenu.visible && (
+  <div
+    ref={contextMenuRef}
+    className="absolute bg-[#F5F5F5] shadow-lg border border-gray-200 rounded-lg p-2 w-52 z-50"
+    style={{ top: contextMenu.y, left: contextMenu.x }}
+  >
+    {/* Cut Option */}
+    <button className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-200 transition rounded-md">
+      <Scissors className="w-4 h-4 text-gray-500" /> 
+      <span className="ml-2">Cut</span> 
+      <span className="ml-auto text-gray-400 text-xs">Ctrl+X</span>
+    </button>
+
+    {/* Copy Option */}
+    <button className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-200 transition rounded-md">
+      <Copy className="w-4 h-4 text-gray-500" /> 
+      <span className="ml-2">Copy</span> 
+      <span className="ml-auto text-gray-400 text-xs">Ctrl+C</span>
+    </button>
+
+    {/* Duplicate Option */}
+    <button className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-200 transition rounded-md">
+      <Clipboard className="w-4 h-4 text-gray-500" /> 
+      <span className="ml-2">Duplicate</span> 
+      <span className="ml-auto text-gray-400 text-xs">Ctrl+D</span>
+    </button>
+
+    {/* Divider */}
+    <div className="border-t border-gray-200 my-1"></div>
+
+    {/* Delete Option */}
+    <button className="flex items-center w-full px-3 py-2 text-red-500 hover:bg-red-50 transition rounded-md">
+      <Trash2 className="w-4 h-4 text-red-500" /> 
+      <span className="ml-2">Delete</span> 
+      <span className="ml-auto text-gray-400 text-xs">Delete</span>
+    </button>
+  </div>
+)}
+
     </div>
   );
 }
