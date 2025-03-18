@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
@@ -8,12 +9,12 @@ import { useRouter } from "next/navigation";
 import Calendar from "../../components/Calendar";
 import EventList from "../../components/EventList";
 import Form from "../../components/EventForm";
-import { SocketContext } from "@/app/layout"; 
+import { SocketContext } from "@/app/layout";
 
 export default function CalendarPage() {
   const { data, loading, error, refetch } = useQuery(GET_USER);
   const router = useRouter();
-  const socket = useContext(SocketContext); 
+  const socket = useContext(SocketContext);
 
   const [formData, setFormData] = useState<event>({
     title: "",
@@ -32,7 +33,7 @@ export default function CalendarPage() {
 
     socket.on("newEvent", () => {
       console.log("New event received via Socket.io");
-      refetch(); 
+      refetch();
     });
 
     socket.on("updateEvent", () => {
@@ -42,7 +43,7 @@ export default function CalendarPage() {
 
     socket.on("deleteEvent", () => {
       console.log("Event deleted via Socket.io");
-      refetch(); 
+      refetch();
     });
 
     return () => {
@@ -67,7 +68,7 @@ export default function CalendarPage() {
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Left Sidebar (Form & Event List) */}
-      <div className="w-1/4 p-6 h-full bg-white shadow-lg rounded-lg flex flex-col">
+      <div className="w-1/4 p-6 h-ful flex flex-col border-r">
         <Form
           data={data}
           selectedEvent={selectedEvent}
@@ -84,8 +85,7 @@ export default function CalendarPage() {
         />
       </div>
 
-      {/* Calendar Section */}
-      <div className="w-3/4 h-full p-9">
+      <div className="w-3/4 h-screen p-8">
         <Calendar
           events={events}
           data={data}

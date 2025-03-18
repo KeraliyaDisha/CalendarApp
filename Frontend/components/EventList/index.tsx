@@ -1,33 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@apollo/client";
-import { handleEventLogout } from "../../hooks/logout";
 import { DELETE_EVENT } from "@/graphql/mutations";
 import { useEffect, useContext } from "react";
-import { SocketContext } from "@/app/layout"; // Import Socket.io Context
+import { SocketContext } from "@/app/layout"; 
 
-export default function EventList({ events, router, gotoDate, refetch }: any) {
+export default function EventList({ events, gotoDate, refetch }: any) {
   const [deleteEvent] = useMutation(DELETE_EVENT);
-  const socket = useContext(SocketContext); // Get Socket.io instance
+  const socket = useContext(SocketContext);
 
   function handleListItemClick(event: any) {
     console.log("Navigating to event:", event);
-    const eventDate = new Date(event.start).toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+    const eventDate = new Date(event.start).toISOString().split("T")[0]; 
     gotoDate(eventDate);
   }
 
   async function handleListItemDelete(id: any) {
     await deleteEvent({ variables: { id } });
     refetch();
-    socket?.emit("deleteEvent", { id }); // Notify other clients
+    socket?.emit("deleteEvent", { id }); 
   }
 
-  // Listen for real-time event deletions
   useEffect(() => {
     if (!socket) return;
 
     socket.on("deleteEvent", (event: any) => {
       console.log("Event deleted via Socket.io:", event);
-      refetch(); // Refresh events
+      refetch(); 
     });
 
     return () => {
@@ -37,7 +35,7 @@ export default function EventList({ events, router, gotoDate, refetch }: any) {
 
   return (
     <>
-      <div className="mt-4 flex-1 overflow-hidden">
+      <div className=" flex-1 overflow-hidden">
         <h4 className="font-semibold text-gray-700 mb-2">Your Events:</h4>
         <div className="overflow-y-auto max-h-[250px] bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 transition duration-300 p-4">
           {events.length === 0 ? (
@@ -56,10 +54,10 @@ export default function EventList({ events, router, gotoDate, refetch }: any) {
                     <strong className="text-lg text-gray-800">
                       {event.title}
                     </strong>{" "}
-                    <br />
-                    <span className="text-lg text-gray-800">
+                    {/* <br /> */}
+                    {/* <span className="text-lg text-gray-800">
                       {event.description}
-                    </span>
+                    </span> */}
                     <br />
                     <span className="text-gray-600 text-sm">
                       {new Intl.DateTimeFormat("en-US", {
@@ -90,7 +88,7 @@ export default function EventList({ events, router, gotoDate, refetch }: any) {
                   <button
                     className="w-8 h-8 flex items-center justify-center bg-red-500 rounded-full hover:bg-red-600 hover:scale-110 transition duration-300 flex-shrink-0"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevents triggering list item click
+                      e.stopPropagation(); 
                       handleListItemDelete(event.id);
                     }}
                   >
@@ -108,13 +106,6 @@ export default function EventList({ events, router, gotoDate, refetch }: any) {
           )}
         </div>
       </div>
-
-      <button
-        onClick={() => handleEventLogout(router)}
-        className="w-full bg-red-500 text-white p-3 rounded-lg mt-6 hover:bg-red-600 focus:outline-none transition duration-200"
-      >
-        Log out
-      </button>
     </>
   );
 }

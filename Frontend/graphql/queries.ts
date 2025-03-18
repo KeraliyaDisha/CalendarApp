@@ -5,6 +5,7 @@ export const GET_USER = gql`
     user {
       id
       firstName
+      email
       events {
         id
         title
