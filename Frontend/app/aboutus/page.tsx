@@ -20,7 +20,7 @@ const AboutUs: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          About <span className="text-teal-800">Calendo</span>
+          About <span className="text-gray-600">Calendo</span>
         </motion.h2>
 
         {/* Project Description */}
@@ -30,7 +30,7 @@ const AboutUs: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <span className="text-teal-800 font-semibold">Calendo</span> is a
+          <span className="text-gray-800 font-semibold">Calendo</span> is a
           modern calendar and scheduling platform designed to streamline event
           management and improve productivity. Whether you&apos;re an individual or a
           business, Calendo makes organizing your time effortless with powerful,
@@ -71,7 +71,7 @@ const AboutUs: React.FC = () => {
             Have questions or feedback? Contact us at{" "}
             <a
               href="mailto:support@calendo.com"
-              className="text-[#00b5b8] font-medium underline underline-offset-2 hover:text-teal-800 transition"
+              className="text-[#00b5b8] font-medium underline underline-offset-2 hover:text-gray-800 transition"
             >
               support@calendo.com
             </a>
@@ -88,7 +88,7 @@ const AboutUs: React.FC = () => {
         >
           <Link
             href="/"
-            className="inline-block px-6 py-3 text-white bg-teal-800 rounded-lg hover:bg-teal-700 transition-all transform hover:scale-105"
+            className="inline-block px-6 py-3 text-white bg-gray-800 rounded-lg hover:bg-gray-700 transition-all transform hover:scale-105"
           >
             Back to Home
           </Link>

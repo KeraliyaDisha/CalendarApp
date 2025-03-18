@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 
 const CTASection = () => {
   return (
-    <section className="bg-gradient-to-br from-teal-700 to-teal-500 text-white py-24">
+    <section className="bg-gradient-to-br from-gray-700 to-gray-500 text-white py-24">
       <div className="container px-6 text-center max-w-4xl mx-auto">
         {/* Title */}
         <h2 className="text-4xl font-extrabold mb-4 leading-tight">
@@ -15,7 +15,7 @@ const CTASection = () => {
         {/* Button */}
         <a
           href="/auth/signin"
-          className="inline-flex items-center gap-3 bg-white text-teal-600 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-xl hover:bg-gray-100 hover:scale-105"
+          className="inline-flex items-center gap-3 bg-white text-gray-600 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-xl hover:bg-gray-100 hover:scale-105"
         >
           Get Started Free
           <ArrowRight className="w-6 h-6" />

@@ -29,7 +29,7 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="bg-teal-50 py-24">
+    <section className="bg-gray-100 py-24">
       <div className="container mx-auto px-6 lg:px-12 max-w-6xl">
         {/* Title */}
         <motion.h2

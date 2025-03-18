@@ -67,9 +67,8 @@ const Signup: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Left Side with matching color (#2D4D59) + Motion Animation */}
       <motion.div
-        className="w-1/2 flex justify-center items-center bg-teal-600"
+        className="w-1/2 flex justify-center items-center bg-gray-600"
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 1 }}
@@ -83,7 +82,6 @@ const Signup: React.FC = () => {
         />
       </motion.div>
 
-      {/* Right Side with a subtle gradient, matching the left side photo's color scheme */}
       <motion.div
         className="w-1/2 flex justify-center items-center overflow-hidden bg-gradient-to-br from-white to-[#2D4D59]/10"
         initial={{ x: 100, opacity: 0 }}
@@ -98,17 +96,17 @@ const Signup: React.FC = () => {
         >
           {/* Title */}
           <motion.h2
-            className="flex items-center justify-center text-2xl font-bold text-[#009689] mb-6"
+            className="flex items-center justify-center text-2xl font-bold text-gray-600 mb-6"
             variants={itemVariants}
           >
-            <Calendar className="w-6 h-6 mr-2 text-teal-600" />
+            <Calendar className="w-6 h-6 mr-2 text-gray-600" />
             Welcome to Calendo!
           </motion.h2>
 
           {/* Loading / Error / Success Messages */}
           {loading && (
             <motion.p
-              className="text-[#009689] text-center"
+              className="text-gray-600 text-center"
               variants={itemVariants}
             >
               Loading...
@@ -245,7 +243,7 @@ const Signup: React.FC = () => {
 
             <motion.button
               type="submit"
-              className="w-full bg-[#009689] text-white py-2 rounded-lg hover:bg-[#009689]/90 transition transform hover:scale-105"
+              className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition transform hover:scale-105"
               disabled={loading}
               variants={itemVariants}
             >
@@ -254,13 +252,13 @@ const Signup: React.FC = () => {
           </motion.form>
 
           <motion.p
-            className="text-center text-[#009689] mt-6"
+            className="text-center text-gray-600 mt-6"
             variants={itemVariants}
           >
             Already have an account?{" "}
             <Link
               href="/auth/signin"
-              className="text-teal-800 font-medium underline underline-offset-2"
+              className="text-gray-900 font-medium hover:text-gray-600"
             >
               Log in
             </Link>

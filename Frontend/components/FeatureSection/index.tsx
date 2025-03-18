@@ -2,22 +2,22 @@ import { Calendar, Users, Clock, Share2 } from "lucide-react";
 
 const services = [
   {
-    icon: <Calendar className="w-14 h-14 text-teal-600" />,
+    icon: <Calendar className="w-14 h-14 text-gray-600" />,
     title: "Smart Scheduling",
     description: "Plan your events effortlessly with daily, weekly, and monthly views.",
   },
   {
-    icon: <Users className="w-14 h-14 text-teal-600" />,
+    icon: <Users className="w-14 h-14 text-gray-600" />,
     title: "Seamless Event Management",
     description: "Create, edit, and manage events with an intuitive drag-and-drop feature.",
   },
   {
-    icon: <Clock className="w-14 h-14 text-teal-600" />,
+    icon: <Clock className="w-14 h-14 text-gray-600" />,
     title: "Real-Time Sync",
     description: "Instant updates across all your devices for seamless coordination.",
   },
   {
-    icon: <Share2 className="w-14 h-14 text-teal-600" />,
+    icon: <Share2 className="w-14 h-14 text-gray-600" />,
     title: "Collaboration Made Easy",
     description: "Share your calendar with teams and schedule meetings effortlessly.",
   },

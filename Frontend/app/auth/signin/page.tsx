@@ -72,7 +72,7 @@ const Login: React.FC = () => {
     <div className="flex h-screen bg-gray-50">
       {/* Left Side with Animation */}
       <motion.div
-        className="w-1/2 flex justify-center items-center bg-teal-600"
+        className="w-1/2 flex justify-center items-center bg-gray-600"
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 1 }}
@@ -101,7 +101,7 @@ const Login: React.FC = () => {
         >
           {/* Heading */}
           <motion.h2
-            className="flex items-center justify-center text-2xl font-bold text-teal-600 mb-6"
+            className="flex items-center justify-center text-2xl font-bold text-gray-600 mb-6"
             variants={itemVariants}
           >
             <Calendar className="w-6 h-6 mr-2" />
@@ -111,7 +111,7 @@ const Login: React.FC = () => {
           {/* Loading / Error / Success Messages */}
           {loading && (
             <motion.p
-              className="text-teal-500 text-center"
+              className="text-gray-500 text-center"
               variants={itemVariants}
             >
               Loading...
@@ -150,7 +150,7 @@ const Login: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none transition-colors ${
                   errors.email
                     ? "border-red-500"
-                    : "border-gray-300 hover:border-teal-400"
+                    : "border-gray-300 hover:border-gray-400"
                 }`}
                 {...register("email", {
                   required: "Email is required",
@@ -174,7 +174,7 @@ const Login: React.FC = () => {
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none transition-colors ${
                   errors.password
                     ? "border-red-500"
-                    : "border-gray-300 hover:border-teal-400"
+                    : "border-gray-300 hover:border-gray-400"
                 }`}
                 {...register("password", {
                   required: "Password is required",
@@ -204,7 +204,7 @@ const Login: React.FC = () => {
 
             <motion.button
               type="submit"
-              className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-500 transition transform hover:scale-105"
+              className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition transform hover:scale-105"
               disabled={loading}
               variants={itemVariants}
             >
@@ -213,11 +213,11 @@ const Login: React.FC = () => {
           </motion.form>
 
           <motion.p
-            className="text-center text-teal-600 mt-6"
+            className="text-center text-gray-600 mt-6"
             variants={itemVariants}
           >
             Don&apos;t have an account?{" "}
-            <Link href="/auth/signup" className="text-teal-800 font-medium">
+            <Link href="/auth/signup" className="text-gray-900 font-medium hover:text-gray-600">
               Sign up
             </Link>
           </motion.p>
