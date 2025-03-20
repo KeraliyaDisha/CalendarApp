@@ -18,11 +18,11 @@ import { handleEventClick } from "../../hooks/eventClick";
 import { handleEventDrop } from "../../hooks/eventDrop";
 import { handleEventResize } from "../../hooks/eventResize";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 import { cellStyle } from "../../hooks/cellStyle";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/layout";
-import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 
 export default function Calendar({
   events,
@@ -37,7 +37,6 @@ export default function Calendar({
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
-  // GraphQL
   const [updateEvent] = useMutation(UPDATE_EVENT);
 
   const socket = useContext(SocketContext);
@@ -119,7 +118,6 @@ export default function Calendar({
     });
   };
 
-  // Handle normal left-click on an event
   const onEventClick = (info: any) => {
     setSelectedEventId(info.event.id);
     handleEventClick(info, data, setSelectedEvent, setFormData);
@@ -136,7 +134,6 @@ export default function Calendar({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedEventId]);
 
-  // Get the common actions from our custom hook
   const actions = useContextMenuActions(refetch);
 
   return (
@@ -199,6 +196,7 @@ export default function Calendar({
             x={contextMenu.x}
             y={contextMenu.y}
             id={contextMenu.eventId}
+            refetch={refetch} 
             onCut={() => {
               actions.handleCutAction(contextMenu.eventId);
               setContextMenu((prev) => ({ ...prev, visible: false }));

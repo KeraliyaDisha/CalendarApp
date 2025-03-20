@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const handleSubmit = async (
     e: React.FormEvent,
     validateEventTimes: any,
@@ -22,7 +23,6 @@ export const handleSubmit = async (
     }
   
     try {
-        console.log("Creating event with start:", start);
         
         const { data: eventData } = await createEvent({
             variables: {
@@ -34,7 +34,6 @@ export const handleSubmit = async (
             },
         });
   
-        console.log("Event created:", eventData.createEvent);
   
         // Emit real-time event creation
         if (socket) {
