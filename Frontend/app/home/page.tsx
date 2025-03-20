@@ -5,15 +5,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { event } from "@/types";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/graphql/queries";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import Calendar from "../../components/Calendar";
-import EventList from "../../components/EventList";
+// import EventList from "../../components/EventList";
 import Form from "../../components/EventForm";
 import { SocketContext } from "@/app/layout";
 
 export default function CalendarPage() {
   const { data, loading, error, refetch } = useQuery(GET_USER);
-  const router = useRouter();
+  // const router = useRouter();
   const socket = useContext(SocketContext);
 
   const [formData, setFormData] = useState<event>({
@@ -24,7 +24,7 @@ export default function CalendarPage() {
   });
 
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [gotoDate, setGotoDate] = useState<(date: string | Date) => void>(
+  const [setGotoDate] = useState<(date: string | Date) => void>(
     () => () => {}
   );
 
@@ -77,12 +77,12 @@ export default function CalendarPage() {
           formData={formData}
           refetch={refetch}
         />
-        <EventList
+        {/* <EventList
           router={router}
           events={events}
           gotoDate={gotoDate}
           refetch={refetch}
-        />
+        /> */}
       </div>
 
       <div className="w-3/4 h-screen p-8">

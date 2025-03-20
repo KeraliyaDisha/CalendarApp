@@ -1,8 +1,13 @@
+import React, { useEffect, useContext, useCallback } from "react";
 import { Scissors, Copy, Clipboard, Trash2 } from "lucide-react";
+import { useMutation } from "@apollo/client";
+import { DELETE_EVENT } from "@/graphql/mutations";
+import { SocketContext } from "@/app/layout";
 
 interface ContextMenuProps {
   x: number;
   y: number;
+  id: string | null;
   onCut: () => void;
   onCopy: () => void;
   onDuplicate: () => void;
@@ -13,15 +18,44 @@ interface ContextMenuProps {
 export default function ContextMenu({
   x,
   y,
+  id,
   onCut,
   onCopy,
   onDuplicate,
   onDelete,
   onClose,
 }: ContextMenuProps) {
+  const [deleteEvent] = useMutation(DELETE_EVENT);
+  const socket = useContext(SocketContext);
+
+  const handleDelete = useCallback(async () => {
+    if (!id) return; 
+    try {
+      await deleteEvent({ variables: { id } });
+      socket?.emit("deleteEvent", { id });
+      onDelete();
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+    onClose();
+  }, [id, deleteEvent, socket, onDelete, onClose]);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Delete") {
+        handleDelete();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleDelete]);
+
   return (
     <div
-      className="absolute bg-[#F5F5F5] shadow-lg border border-gray-200 rounded-lg p-2 w-52 z-50"
+      className="absolute bg-[#F5F5F5] shadow-lg border border-gray-200 rounded-lg p-2 w-56 z-50"
       style={{ top: y, left: x }}
       onContextMenu={(e) => e.preventDefault()}
     >
@@ -69,10 +103,7 @@ export default function ContextMenu({
 
       {/* Delete Option */}
       <button
-        onClick={() => {
-          onDelete();
-          onClose();
-        }}
+        onClick={handleDelete}
         className="flex items-center w-full px-3 py-2 text-red-500 hover:bg-red-50 transition rounded-md"
       >
         <Trash2 className="w-4 h-4 text-red-500" />

@@ -97,15 +97,15 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
         {/* Navigation buttons */}
         <button
           onClick={handlePrev}
-          className="px-3 py-1 bg-gray-600 text-white rounded-md 
-                     hover:bg-gray-500"
+          className="px-3 py-1 bg-gray-700 text-white rounded-md 
+                     hover:bg-gray-600"
         >
           &lt;
         </button>
         <button
           onClick={handleNext}
-          className="px-3 py-1 bg-gray-600 text-white rounded-md 
-                     hover:bg-gray-500"
+          className="px-3 py-1 bg-gray-700 text-white rounded-md 
+                     hover:bg-gray-600"
         >
           &gt;
         </button>

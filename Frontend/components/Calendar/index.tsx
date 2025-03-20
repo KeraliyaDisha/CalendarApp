@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useMutation } from "@apollo/client";
-import { useRef, useContext, useState } from "react";
+import { useRef, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -21,6 +22,7 @@ import { cellStyle } from "../../hooks/cellStyle";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/layout";
+import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 
 export default function Calendar({
   events,
@@ -35,19 +37,22 @@ export default function Calendar({
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
+  // GraphQL
   const [updateEvent] = useMutation(UPDATE_EVENT);
+
   const socket = useContext(SocketContext);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentViewLabel, setCurrentViewLabel] = useState("Month");
   const [currentTitle, setCurrentTitle] = useState("");
 
-  // Context Menu State
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     x: 0,
     y: 0,
-    eventId: null,
+    eventId: null as string | null,
   });
 
   const handleLogout = () => {
@@ -80,6 +85,7 @@ export default function Calendar({
     }
   });
 
+  // Socket events
   useState(() => {
     if (!socket) return;
     socket.on("newEvent", refetch);
@@ -113,6 +119,26 @@ export default function Calendar({
     });
   };
 
+  // Handle normal left-click on an event
+  const onEventClick = (info: any) => {
+    setSelectedEventId(info.event.id);
+    handleEventClick(info, data, setSelectedEvent, setFormData);
+  };
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Delete" && selectedEventId) {
+        actions.handleDeleteAction(selectedEventId);
+        setSelectedEventId(null);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedEventId]);
+
+  // Get the common actions from our custom hook
+  const actions = useContextMenuActions(refetch);
+
   return (
     <div className="w-full h-full">
       {/* Custom Toolbar */}
@@ -131,7 +157,12 @@ export default function Calendar({
       {/* FullCalendar Component */}
       <FullCalendar
         ref={calendarRef}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, multiMonthPlugin]}
+        plugins={[
+          dayGridPlugin,
+          timeGridPlugin,
+          interactionPlugin,
+          multiMonthPlugin,
+        ]}
         headerToolbar={{ left: "", center: "", right: "" }}
         titleFormat={{ year: "numeric", month: "long", day: "numeric" }}
         datesSet={handleDatesSet}
@@ -143,15 +174,21 @@ export default function Calendar({
         editable
         eventResizableFromStart
         events={[...events, ...festivals]}
-        eventClick={(info) => handleEventClick(info, data, setSelectedEvent, setFormData)}
-        eventDrop={(eventDropInfo) => handleEventDrop(eventDropInfo, updateEvent, refetch, socket)}
-        dateClick={(info) => handleDateClick(info, setFormData, setSelectedEvent)}
+        eventClick={onEventClick}
+        eventDrop={(eventDropInfo) =>
+          handleEventDrop(eventDropInfo, updateEvent, refetch, socket)
+        }
+        dateClick={(info) =>
+          handleDateClick(info, setFormData, setSelectedEvent)
+        }
         select={(info) => handleSelect(info, setFormData)}
         eventResize={(eventResizeInfo) =>
           handleEventResize(eventResizeInfo, updateEvent, refetch, socket)
         }
         eventDidMount={(info) => {
-          info.el.addEventListener("contextmenu", (e) => handleEventRightClick(info, e));
+          info.el.addEventListener("contextmenu", (e) =>
+            handleEventRightClick(info, e)
+          );
         }}
       />
 
@@ -161,11 +198,26 @@ export default function Calendar({
           <ContextMenu
             x={contextMenu.x}
             y={contextMenu.y}
-            onCut={() => console.log("Cut action", contextMenu.eventId)}
-            onCopy={() => console.log("Copy action", contextMenu.eventId)}
-            onDuplicate={() => console.log("Duplicate action", contextMenu.eventId)}
-            onDelete={() => console.log("Delete action", contextMenu.eventId)}
-            onClose={() => setContextMenu((prev) => ({ ...prev, visible: false }))}
+            id={contextMenu.eventId}
+            onCut={() => {
+              actions.handleCutAction(contextMenu.eventId);
+              setContextMenu((prev) => ({ ...prev, visible: false }));
+            }}
+            onCopy={() => {
+              actions.handleCopyAction(contextMenu.eventId);
+              setContextMenu((prev) => ({ ...prev, visible: false }));
+            }}
+            onDuplicate={() => {
+              actions.handleDuplicateAction(contextMenu.eventId);
+              setContextMenu((prev) => ({ ...prev, visible: false }));
+            }}
+            onDelete={() => {
+              actions.handleDeleteAction(contextMenu.eventId);
+              setContextMenu((prev) => ({ ...prev, visible: false }));
+            }}
+            onClose={() =>
+              setContextMenu((prev) => ({ ...prev, visible: false }))
+            }
           />
         </div>
       )}

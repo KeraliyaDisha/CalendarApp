@@ -1,37 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation } from "@apollo/client";
-import { DELETE_EVENT } from "@/graphql/mutations";
-import { useEffect, useContext } from "react";
-import { SocketContext } from "@/app/layout"; 
 
-export default function EventList({ events, gotoDate, refetch }: any) {
-  const [deleteEvent] = useMutation(DELETE_EVENT);
-  const socket = useContext(SocketContext);
-
+export default function EventList({ events, gotoDate }: any) {
   function handleListItemClick(event: any) {
     console.log("Navigating to event:", event);
-    const eventDate = new Date(event.start).toISOString().split("T")[0]; 
+    const eventDate = new Date(event.start).toISOString().split("T")[0];
     gotoDate(eventDate);
   }
-
-  async function handleListItemDelete(id: any) {
-    await deleteEvent({ variables: { id } });
-    refetch();
-    socket?.emit("deleteEvent", { id }); 
-  }
-
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on("deleteEvent", (event: any) => {
-      console.log("Event deleted via Socket.io:", event);
-      refetch(); 
-    });
-
-    return () => {
-      socket.off("deleteEvent");
-    };
-  }, [socket, refetch]);
 
   return (
     <>
@@ -54,8 +28,8 @@ export default function EventList({ events, gotoDate, refetch }: any) {
                     <strong className="text-lg text-gray-800">
                       {event.title}
                     </strong>{" "}
-                    {/* <br /> */}
-                    {/* <span className="text-lg text-gray-800">
+                    {/* <br />
+                    <span className="text-lg text-gray-800">
                       {event.description}
                     </span> */}
                     <br />
@@ -85,21 +59,6 @@ export default function EventList({ events, gotoDate, refetch }: any) {
                       }).format(new Date(event.end))}
                     </span>
                   </div>
-                  <button
-                    className="w-8 h-8 flex items-center justify-center bg-red-500 rounded-full hover:bg-red-600 hover:scale-110 transition duration-300 flex-shrink-0"
-                    onClick={(e) => {
-                      e.stopPropagation(); 
-                      handleListItemDelete(event.id);
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="w-5 h-5 fill-white"
-                    >
-                      <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"></path>
-                    </svg>
-                  </button>
                 </li>
               ))}
             </ul>

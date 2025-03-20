@@ -110,7 +110,7 @@ export default function Form({
 
                 if (updatedEvent) socket?.emit("updateEvent", updatedEvent); 
               }}
-              className="w-full bg-gray-600 text-white p-2 rounded-lg mt-4 hover:bg-gray-700 focus:outline-none transition duration-200"
+              className="w-full bg-gray-700 text-white p-2 rounded-lg mt-4 hover:bg-gray-600 focus:outline-none transition duration-200"
             >
               Update Event
             </button>
@@ -118,7 +118,7 @@ export default function Form({
         ) : (
           <button
             type="submit"
-            className="w-full bg-gray-600 text-white p-2 rounded-lg mt-4 hover:bg-gray-700 focus:outline-none transition duration-200"
+            className="w-full bg-gray-700 text-white p-2 rounded-lg mt-4 hover:bg-gray-600 focus:outline-none transition duration-200"
           >
             Add Event
           </button>
