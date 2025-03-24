@@ -21,8 +21,17 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 import { cellStyle } from "../../hooks/cellStyle";
 import { festivals } from "@/festival";
-import { UPDATE_EVENT } from "@/graphql/mutations";
+import { UPDATE_EVENT, CREATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/layout";
+
+interface CalendarProps {
+  events: any[];
+  data: any;
+  refetch: () => void;
+  setFormData: (data: any) => void;
+  setSelectedEvent: (event: any) => void;
+  setGotoDate: (fn: (date: string | Date) => void) => void;
+}
 
 export default function Calendar({
   events,
@@ -31,13 +40,14 @@ export default function Calendar({
   setFormData,
   setSelectedEvent,
   setGotoDate,
-}: any) {
+}: CalendarProps) {
   const router = useRouter();
   const calendarRef = useRef<FullCalendar | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
-  
+
   const [updateEvent] = useMutation(UPDATE_EVENT);
+  const [createEvent] = useMutation(CREATE_EVENT);
   const socket = useContext(SocketContext);
 
   const [localEvents, setLocalEvents] = useState<any[]>([...events]);
@@ -58,7 +68,6 @@ export default function Calendar({
   const [copiedEvent, setCopiedEvent] = useState<any>(null);
 
   const actions = useContextMenuActions(refetch);
-
   const handleLogout = () => {
     handleEventLogout(router);
   };
@@ -89,7 +98,7 @@ export default function Calendar({
     }
   });
 
-  useState(() => {
+  useEffect(() => {
     if (!socket) return;
     socket.on("newEvent", refetch);
     socket.on("updateEvent", refetch);
@@ -99,7 +108,7 @@ export default function Calendar({
       socket.off("updateEvent", refetch);
       socket.off("deleteEvent", refetch);
     };
-  });
+  }, [socket, refetch]);
 
   const handleDatesSet = (arg: any) => {
     setCurrentTitle(arg.view.title);
@@ -131,7 +140,8 @@ export default function Calendar({
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Delete" && selectedEventId) {
         const eventData =
-          localEvents.find((event: any) => event.id === selectedEventId) || null;
+          localEvents.find((event: any) => event.id === selectedEventId) ||
+          null;
         if (eventData) {
           actions.handleDeleteAction(eventData);
         }
@@ -144,10 +154,13 @@ export default function Calendar({
 
   const selectedEventData =
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
+
   const handleDateClick = (info: any) => {
+    console.log("Clicked Date Info:", info);
+    console.log("Received Data:", data);
+
     if (copiedEvent) {
       const newStart = new Date(info.dateStr);
-
       let newEnd = copiedEvent.end;
       if (copiedEvent.end) {
         const originalStart = new Date(copiedEvent.start);
@@ -155,19 +168,42 @@ export default function Calendar({
         const duration = originalEnd.getTime() - originalStart.getTime();
         newEnd = new Date(newStart.getTime() + duration).toISOString();
       }
-      const newEvent = {
-        ...copiedEvent,
+
+      const userId = data?.user?.id; 
+
+      if (!userId) {
+        console.error("No userId found! Cannot create event.");
+        return;
+      }
+      const newEventInput = {
+        userId,
+        title: copiedEvent.title || "Untitled Event",
+        description: copiedEvent.description || "",
         start: newStart.toISOString(),
         end: newEnd,
-        id: new Date().getTime().toString(), 
       };
 
-      console.log("Pasting event on new date:", newEvent);
+      console.log("Pasting event on new date:", newEventInput);
 
-      setLocalEvents((prevEvents) => [...prevEvents, newEvent]);
+      setLocalEvents((prevEvents) => [...prevEvents, newEventInput]);
+
+      createEvent({
+        variables: newEventInput,
+        errorPolicy: "all",
+      })
+        .then(({ data, errors }) => {
+          if (errors && errors.length > 0) {
+            console.error("GraphQL Errors:", errors);
+          } else {
+            console.log("Event created successfully:", data);
+            refetch();
+          }
+        })
+        .catch((error) => {
+          console.error("Mutation error:", error);
+        });
 
       setCopiedEvent(null);
-
     } else {
       baseDateClick(info, setFormData, setSelectedEvent);
     }
@@ -231,7 +267,7 @@ export default function Calendar({
           <ContextMenu
             x={contextMenu.x}
             y={contextMenu.y}
-            eventData={selectedEventData} 
+            eventData={selectedEventData}
             refetch={refetch}
             onCut={() => {
               actions.handleCutAction(selectedEventData);
