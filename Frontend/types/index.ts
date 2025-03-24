@@ -10,7 +10,7 @@ export interface signin {
   password: string;
 }
 
-export interface event {
+export interface eventType {
   title: string;
   description: string;
   start: string;

@@ -9,8 +9,7 @@ const HeroSection = () => {
           Revolutionize Your <span className="text-gray-300">Schedule</span>
         </h1>
         <p className="text-xl lg:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed">
-          A smart calendar platform for effortless personal and professional
-          scheduling. Manage your events with a simple, real-time solution.
+        A powerful smart calendar for effortless scheduling. Stay organized and manage events in real-time—anytime, anywhere.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <a

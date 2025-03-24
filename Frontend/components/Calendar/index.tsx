@@ -13,7 +13,7 @@ import ContextMenu from "../ContextMenu";
 import { CalendarToolbar } from "../CalenderToolbar";
 import { handleEventLogout } from "@/hooks/logout";
 import { handleSelect } from "../../hooks/Select";
-import { handleDateClick } from "../../hooks/dateClick";
+import { handleDateClick as baseDateClick } from "../../hooks/dateClick";
 import { handleEventClick } from "../../hooks/eventClick";
 import { handleEventDrop } from "../../hooks/eventDrop";
 import { handleEventResize } from "../../hooks/eventResize";
@@ -32,27 +32,32 @@ export default function Calendar({
   setSelectedEvent,
   setGotoDate,
 }: any) {
+  const router = useRouter();
   const calendarRef = useRef<FullCalendar | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
-
+  
   const [updateEvent] = useMutation(UPDATE_EVENT);
-
   const socket = useContext(SocketContext);
+
+  const [localEvents, setLocalEvents] = useState<any[]>([...events]);
+  useEffect(() => {
+    setLocalEvents([...events]);
+  }, [events]);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentViewLabel, setCurrentViewLabel] = useState("Month");
   const [currentTitle, setCurrentTitle] = useState("");
-
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-
   const [contextMenu, setContextMenu] = useState({
     visible: false,
     x: 0,
     y: 0,
     eventId: null as string | null,
   });
+  const [copiedEvent, setCopiedEvent] = useState<any>(null);
+
+  const actions = useContextMenuActions(refetch);
 
   const handleLogout = () => {
     handleEventLogout(router);
@@ -84,7 +89,6 @@ export default function Calendar({
     }
   });
 
-  // Socket events
   useState(() => {
     if (!socket) return;
     socket.on("newEvent", refetch);
@@ -126,15 +130,48 @@ export default function Calendar({
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Delete" && selectedEventId) {
-        actions.handleDeleteAction(selectedEventId);
+        const eventData =
+          localEvents.find((event: any) => event.id === selectedEventId) || null;
+        if (eventData) {
+          actions.handleDeleteAction(eventData);
+        }
         setSelectedEventId(null);
       }
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedEventId]);
+  }, [selectedEventId, localEvents]);
 
-  const actions = useContextMenuActions(refetch);
+  const selectedEventData =
+    localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
+  const handleDateClick = (info: any) => {
+    if (copiedEvent) {
+      const newStart = new Date(info.dateStr);
+
+      let newEnd = copiedEvent.end;
+      if (copiedEvent.end) {
+        const originalStart = new Date(copiedEvent.start);
+        const originalEnd = new Date(copiedEvent.end);
+        const duration = originalEnd.getTime() - originalStart.getTime();
+        newEnd = new Date(newStart.getTime() + duration).toISOString();
+      }
+      const newEvent = {
+        ...copiedEvent,
+        start: newStart.toISOString(),
+        end: newEnd,
+        id: new Date().getTime().toString(), 
+      };
+
+      console.log("Pasting event on new date:", newEvent);
+
+      setLocalEvents((prevEvents) => [...prevEvents, newEvent]);
+
+      setCopiedEvent(null);
+
+    } else {
+      baseDateClick(info, setFormData, setSelectedEvent);
+    }
+  };
 
   return (
     <div className="w-full h-full">
@@ -170,14 +207,13 @@ export default function Calendar({
         selectable
         editable
         eventResizableFromStart
-        events={[...events, ...festivals]}
+        events={[...localEvents, ...festivals]}
         eventClick={onEventClick}
         eventDrop={(eventDropInfo) =>
           handleEventDrop(eventDropInfo, updateEvent, refetch, socket)
         }
-        dateClick={(info) =>
-          handleDateClick(info, setFormData, setSelectedEvent)
-        }
+        // Use our custom dateClick handler.
+        dateClick={handleDateClick}
         select={(info) => handleSelect(info, setFormData)}
         eventResize={(eventResizeInfo) =>
           handleEventResize(eventResizeInfo, updateEvent, refetch, socket)
@@ -195,22 +231,23 @@ export default function Calendar({
           <ContextMenu
             x={contextMenu.x}
             y={contextMenu.y}
-            id={contextMenu.eventId}
-            refetch={refetch} 
+            eventData={selectedEventData} 
+            refetch={refetch}
             onCut={() => {
-              actions.handleCutAction(contextMenu.eventId);
+              actions.handleCutAction(selectedEventData);
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onCopy={() => {
-              actions.handleCopyAction(contextMenu.eventId);
+              setCopiedEvent(selectedEventData);
+              actions.handleCopyAction(selectedEventData);
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onDuplicate={() => {
-              actions.handleDuplicateAction(contextMenu.eventId);
+              actions.handleDuplicateAction(selectedEventData);
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onDelete={() => {
-              actions.handleDeleteAction(contextMenu.eventId);
+              actions.handleDeleteAction(selectedEventData);
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onClose={() =>

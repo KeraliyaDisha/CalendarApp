@@ -1,12 +1,13 @@
 import React, { useEffect, useCallback } from "react";
 import { Scissors, Copy, Clipboard, Trash2 } from "lucide-react";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
+import { EventType } from "react-hook-form";
 
 interface ContextMenuProps {
   x: number;
   y: number;
-  id: string | null;
-  refetch: () => void; // Required for the hook
+  eventData: EventType | null; 
+  refetch: () => void; 
   onCut: () => void;
   onCopy: () => void;
   onDuplicate: () => void;
@@ -17,7 +18,7 @@ interface ContextMenuProps {
 export default function ContextMenu({
   x,
   y,
-  id,
+  eventData,
   refetch,
   onCut,
   onCopy,
@@ -27,34 +28,33 @@ export default function ContextMenu({
 }: ContextMenuProps) {
   const actions = useContextMenuActions(refetch);
 
-  // Wrap the actions so you can perform extra behavior.
   const handleCut = useCallback(() => {
-    if (!id) return;
-    actions.handleCutAction(id);
+    if (!eventData) return;
+    actions.handleCutAction(eventData);
     onCut();
     onClose();
-  }, [id, actions, onCut, onClose]);
+  }, [eventData, actions, onCut, onClose]);
 
   const handleCopy = useCallback(() => {
-    if (!id) return;
-    actions.handleCopyAction(id);
+    if (!eventData) return;
+    actions.handleCopyAction(eventData);
     onCopy();
     onClose();
-  }, [id, actions, onCopy, onClose]);
+  }, [eventData, actions, onCopy, onClose]);
 
   const handleDuplicate = useCallback(() => {
-    if (!id) return;
-    actions.handleDuplicateAction(id);
+    if (!eventData) return;
+    actions.handleDuplicateAction(eventData);
     onDuplicate();
     onClose();
-  }, [id, actions, onDuplicate, onClose]);
+  }, [eventData, actions, onDuplicate, onClose]);
 
   const handleDelete = useCallback(async () => {
-    if (!id) return;
-    await actions.handleDeleteAction(id);
+    if (!eventData) return;
+    await actions.handleDeleteAction(eventData);
     onDelete();
     onClose();
-  }, [id, actions, onDelete, onClose]);
+  }, [eventData, actions, onDelete, onClose]);
 
   // Global keydown listener for the Delete key.
   useEffect(() => {
