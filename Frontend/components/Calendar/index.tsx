@@ -283,7 +283,7 @@ export default function Calendar({
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onDelete={() => {
-              actions.handleDeleteAction(selectedEventData);
+              actions.handleDeleteAction(selectedEventData.id);
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onClose={() =>

@@ -56,7 +56,6 @@ export default function ContextMenu({
     onClose();
   }, [eventData, actions, onDelete, onClose]);
 
-  // Global keydown listener for the Delete key.
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Delete") {
