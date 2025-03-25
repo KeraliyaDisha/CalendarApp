@@ -11,6 +11,7 @@ export interface signin {
 }
 
 export interface eventType {
+  id: string; 
   title: string;
   description: string;
   start: string;

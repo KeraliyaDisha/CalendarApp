@@ -1,12 +1,12 @@
 import React, { useEffect, useCallback } from "react";
 import { Scissors, Copy, Clipboard, Trash2 } from "lucide-react";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
-import { EventType } from "react-hook-form";
+import { eventType } from "@/types";
 
 interface ContextMenuProps {
   x: number;
   y: number;
-  eventData: EventType | null; 
+  eventData: eventType | null; 
   refetch: () => void; 
   onCut: () => void;
   onCopy: () => void;
@@ -30,31 +30,39 @@ export default function ContextMenu({
 
   const handleCut = useCallback(() => {
     if (!eventData) return;
-    actions.handleCutAction(eventData);
+    actions.handleCutAction(eventData.id);
     onCut();
     onClose();
   }, [eventData, actions, onCut, onClose]);
 
   const handleCopy = useCallback(() => {
     if (!eventData) return;
-    actions.handleCopyAction(eventData);
+    actions.handleCopyAction(eventData.id);
     onCopy();
     onClose();
   }, [eventData, actions, onCopy, onClose]);
 
   const handleDuplicate = useCallback(() => {
     if (!eventData) return;
-    actions.handleDuplicateAction(eventData);
+    actions.handleDuplicateAction(eventData.id);
     onDuplicate();
     onClose();
   }, [eventData, actions, onDuplicate, onClose]);
 
   const handleDelete = useCallback(async () => {
-    if (!eventData) return;
-    await actions.handleDeleteAction(eventData);
+    if (!eventData?.id) { 
+      console.error("No valid event ID found.");
+      return;
+    }
+  
+    console.log("Deleting event with ID:", eventData.id);
+  
+    await actions.handleDeleteAction(eventData.id);
+    refetch();
     onDelete();
     onClose();
-  }, [eventData, actions, onDelete, onClose]);
+  }, [eventData, actions, onDelete, onClose, refetch]);
+  
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
