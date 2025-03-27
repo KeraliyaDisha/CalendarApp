@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/graphql/queries";
 
 interface UserMenuProps {
-  onLogout: () => void; 
+  onLogout: () => void;
 }
 
 export default function UserProfileMenu({ onLogout }: UserMenuProps) {
@@ -13,7 +14,11 @@ export default function UserProfileMenu({ onLogout }: UserMenuProps) {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (open && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (
+        open &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -27,16 +32,20 @@ export default function UserProfileMenu({ onLogout }: UserMenuProps) {
   if (error) return <p>Error loading user data.</p>;
 
   const user = data.user;
-  const initial = user.firstName.charAt(0).toUpperCase();
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* Profile Icon Button */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center justify-center w-10 h-10 rounded-full border-2 hover:bg-gray-100"
+        className="flex items-center justify-center w-8 h-8 rounded-full overflow-hidden hover:border-2"
       >
-        <span className="text-sm font-semibold">{initial}</span>
+        <Image
+          src="/profile icon.png" 
+          alt="Profile"
+          width={30} 
+          height={30}
+          className="w-full h-full rounded-full object-cover"
+        />
       </button>
 
       {/* Dropdown Menu */}
@@ -44,14 +53,16 @@ export default function UserProfileMenu({ onLogout }: UserMenuProps) {
         <div className="absolute right-0 mt-2 w-56 bg-[#F5F5F5] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
           {/* User Information */}
           <div className="px-4 py-3">
-            <p className="text-sm font-medium text-gray-900">{user.firstName}</p>
+            <p className="text-sm font-medium text-gray-900">
+              {user.firstName}
+            </p>
             <p className="text-sm text-gray-500 truncate">{user.email}</p>
           </div>
           <div className="border-t border-gray-200" />
 
           {/* Logout Button */}
           <button
-            onClick={onLogout} 
+            onClick={onLogout}
             className="w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 font-semibold"
           >
             Log out
