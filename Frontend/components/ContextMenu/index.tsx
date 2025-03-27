@@ -53,10 +53,7 @@ export default function ContextMenu({
     if (!eventData?.id) { 
       console.error("No valid event ID found.");
       return;
-    }
-  
-    console.log("Deleting event with ID:", eventData.id);
-  
+    }  
     await actions.handleDeleteAction(eventData.id);
     refetch();
     onDelete();

@@ -31,14 +31,12 @@ export function useContextMenuActions(refetch: () => void) {
     navigator.clipboard
       .writeText(eventId)
       .then(() => {
-        console.log("Cut event:", eventId);
       })
       .catch((err) => console.error("Failed to cut:", err));
   };
 
   const handleDuplicateAction = (eventId: string | null) => {
     if (!eventId) return;
-    console.log("Duplicate action", eventId);
   };
 
   return {

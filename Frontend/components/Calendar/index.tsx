@@ -242,7 +242,6 @@ export default function Calendar({
         eventDrop={(eventDropInfo) =>
           handleEventDrop(eventDropInfo, updateEvent, refetch, socket)
         }
-        // Use our custom dateClick handler.
         dateClick={handleDateClick}
         select={(info) => handleSelect(info, setFormData)}
         eventResize={(eventResizeInfo) =>
