@@ -42,9 +42,9 @@ const FeaturesSection = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:-translate-y-2 flex flex-col items-center min-h-[250px]"
+              className="group bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-200 border border-gray-200 hover:-translate-y-1 flex flex-col items-center min-h-[250px]"
             >
-              <div className="mb-5 transform group-hover:scale-110 transition-transform duration-300">
+              <div className="mb-5 transform group-hover:scale-100 transition-transform duration-300">
                 {service.icon}
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">

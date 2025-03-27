@@ -156,8 +156,6 @@ export default function Calendar({
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
 
   const handleDateClick = (info: any) => {
-    console.log("Clicked Date Info:", info);
-    console.log("Received Data:", data);
 
     if (copiedEvent) {
       const newStart = new Date(info.dateStr);
@@ -182,20 +180,16 @@ export default function Calendar({
         start: newStart.toISOString(),
         end: newEnd,
       };
-
-      console.log("Pasting event on new date:", newEventInput);
-
       setLocalEvents((prevEvents) => [...prevEvents, newEventInput]);
 
       createEvent({
         variables: newEventInput,
         errorPolicy: "all",
       })
-        .then(({ data, errors }) => {
+        .then(({ errors }) => {
           if (errors && errors.length > 0) {
             console.error("GraphQL Errors:", errors);
           } else {
-            console.log("Event created successfully:", data);
             refetch();
           }
         })

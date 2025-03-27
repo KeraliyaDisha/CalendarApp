@@ -46,7 +46,7 @@ const TestimonialsSection = () => {
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
-              className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:-translate-y-2 flex flex-col items-center text-center"
+              className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-200 border border-gray-200 hover:-translate-y-1 flex flex-col items-center text-center"
               whileHover={{ scale: 1.03 }}
             >
               {/* Rating Stars */}
