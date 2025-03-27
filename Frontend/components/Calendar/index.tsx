@@ -23,6 +23,7 @@ import { cellStyle } from "../../hooks/cellStyle";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT, CREATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/layout";
+import { usePasteEvent } from "@/hooks/usePasteEvent";
 
 interface CalendarProps {
   events: any[];
@@ -66,6 +67,7 @@ export default function Calendar({
     eventId: null as string | null,
   });
   const [copiedEvent, setCopiedEvent] = useState<any>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const actions = useContextMenuActions(refetch);
   const handleLogout = () => {
@@ -140,8 +142,7 @@ export default function Calendar({
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Delete" && selectedEventId) {
         const eventData =
-          localEvents.find((event: any) => event.id === selectedEventId) ||
-          null;
+          localEvents.find((event: any) => event.id === selectedEventId) || null;
         if (eventData) {
           actions.handleDeleteAction(eventData);
         }
@@ -156,52 +157,19 @@ export default function Calendar({
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
 
   const handleDateClick = (info: any) => {
-
-    if (copiedEvent) {
-      const newStart = new Date(info.dateStr);
-      let newEnd = copiedEvent.end;
-      if (copiedEvent.end) {
-        const originalStart = new Date(copiedEvent.start);
-        const originalEnd = new Date(copiedEvent.end);
-        const duration = originalEnd.getTime() - originalStart.getTime();
-        newEnd = new Date(newStart.getTime() + duration).toISOString();
-      }
-
-      const userId = data?.user?.id; 
-
-      if (!userId) {
-        console.error("No userId found! Cannot create event.");
-        return;
-      }
-      const newEventInput = {
-        userId,
-        title: copiedEvent.title || "Untitled Event",
-        description: copiedEvent.description || "",
-        start: newStart.toISOString(),
-        end: newEnd,
-      };
-      setLocalEvents((prevEvents) => [...prevEvents, newEventInput]);
-
-      createEvent({
-        variables: newEventInput,
-        errorPolicy: "all",
-      })
-        .then(({ errors }) => {
-          if (errors && errors.length > 0) {
-            console.error("GraphQL Errors:", errors);
-          } else {
-            refetch();
-          }
-        })
-        .catch((error) => {
-          console.error("Mutation error:", error);
-        });
-
-      setCopiedEvent(null);
-    } else {
+    setSelectedDate(new Date(info.dateStr));
+    if (!copiedEvent) {
       baseDateClick(info, setFormData, setSelectedEvent);
     }
   };
+  usePasteEvent({
+    copiedEvent,
+    selectedDate,
+    data,
+    createEvent,
+    refetch,
+    setLocalEvents,
+  });
 
   return (
     <div className="w-full h-full">
