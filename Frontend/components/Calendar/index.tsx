@@ -20,6 +20,7 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 import { cellStyle } from "../../hooks/cellStyle";
 import { duplicateEvent } from "@/hooks/duplicateEventUtil";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT, CREATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/layout";
@@ -139,40 +140,6 @@ export default function Calendar({
     handleEventClick(info, data, setSelectedEvent, setFormData);
   };
 
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Delete" && selectedEventId) {
-        const eventData =
-          localEvents.find((event: any) => event.id === selectedEventId) ||
-          null;
-        if (eventData) {
-          actions.handleDeleteAction(eventData.id);
-        }
-        setSelectedEventId(null);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [actions, selectedEventId, localEvents]);
-
-  useEffect(() => {
-    function handleCutHotkey(e: KeyboardEvent) {
-      if (e.ctrlKey && e.key.toLowerCase() === "x" && selectedEventId) {
-        e.preventDefault();
-        const eventData =
-          localEvents.find((event: any) => event.id === selectedEventId) ||
-          null;
-        if (eventData) {
-          setCopiedEvent(eventData);
-          actions.handleDeleteAction(eventData.id);
-          setSelectedEventId(null);
-        }
-      }
-    }
-    window.addEventListener("keydown", handleCutHotkey);
-    return () => window.removeEventListener("keydown", handleCutHotkey);
-  }, [selectedEventId, localEvents, actions]);
-
   const selectedEventData =
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
 
@@ -182,6 +149,14 @@ export default function Calendar({
       baseDateClick(info, setFormData, setSelectedEvent);
     }
   };
+
+  useKeyboardShortcuts({
+    selectedEventId,
+    localEvents,
+    setCopiedEvent,
+    setSelectedEventId,
+    actions,
+  });
 
   usePasteEvent({
     copiedEvent,
