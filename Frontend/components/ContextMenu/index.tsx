@@ -1,16 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// ContextMenu.tsx
 import React, { useEffect, useCallback } from "react";
 import { Scissors, Copy, Clipboard, Trash2 } from "lucide-react";
-import { useContextMenuActions } from "@/hooks/useContextMenuActions";
-import { eventType } from "@/types";
 
 interface ContextMenuProps {
   x: number;
   y: number;
-  eventData: eventType | null; 
-  refetch: () => void; 
+  eventData: any; // replace with your event type if available
+  refetch: () => void;
   onCut: () => void;
   onCopy: () => void;
-  onDuplicate: () => void;
+  onDuplicate: () => Promise<void>;
   onDelete: () => void;
   onClose: () => void;
 }
@@ -19,47 +19,38 @@ export default function ContextMenu({
   x,
   y,
   eventData,
-  refetch,
   onCut,
   onCopy,
   onDuplicate,
   onDelete,
   onClose,
 }: ContextMenuProps) {
-  const actions = useContextMenuActions(refetch);
-
   const handleCut = useCallback(() => {
     if (!eventData) return;
-    actions.handleCutAction(eventData.id);
     onCut();
     onClose();
-  }, [eventData, actions, onCut, onClose]);
+  }, [eventData, onCut, onClose]);
 
   const handleCopy = useCallback(() => {
     if (!eventData) return;
-    actions.handleCopyAction(eventData.id);
     onCopy();
     onClose();
-  }, [eventData, actions, onCopy, onClose]);
+  }, [eventData, onCopy, onClose]);
 
-  const handleDuplicate = useCallback(() => {
+  const handleDuplicate = useCallback(async () => {
     if (!eventData) return;
-    actions.handleDuplicateAction(eventData.id);
-    onDuplicate();
+    await onDuplicate();
     onClose();
-  }, [eventData, actions, onDuplicate, onClose]);
+  }, [eventData, onDuplicate, onClose]);
 
   const handleDelete = useCallback(async () => {
-    if (!eventData?.id) { 
+    if (!eventData?.id) {
       console.error("No valid event ID found.");
       return;
-    }  
-    await actions.handleDeleteAction(eventData.id);
-    refetch();
-    onDelete();
+    }
+    await onDelete();
     onClose();
-  }, [eventData, actions, onDelete, onClose, refetch]);
-  
+  }, [eventData, onDelete, onClose]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -77,7 +68,6 @@ export default function ContextMenu({
       style={{ top: y, left: x }}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {/* Cut Option */}
       <button
         onClick={handleCut}
         className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-200 transition rounded-md"
@@ -87,7 +77,6 @@ export default function ContextMenu({
         <span className="ml-auto text-gray-400 text-xs">Ctrl+X</span>
       </button>
 
-      {/* Copy Option */}
       <button
         onClick={handleCopy}
         className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-200 transition rounded-md"
@@ -97,7 +86,6 @@ export default function ContextMenu({
         <span className="ml-auto text-gray-400 text-xs">Ctrl+C</span>
       </button>
 
-      {/* Duplicate Option */}
       <button
         onClick={handleDuplicate}
         className="flex items-center w-full px-3 py-2 text-gray-700 hover:bg-gray-200 transition rounded-md"
@@ -107,10 +95,8 @@ export default function ContextMenu({
         <span className="ml-auto text-gray-400 text-xs">Ctrl+D</span>
       </button>
 
-      {/* Divider */}
       <div className="border-t border-gray-200 my-1"></div>
 
-      {/* Delete Option */}
       <button
         onClick={handleDelete}
         className="flex items-center w-full px-3 py-2 text-red-500 hover:bg-red-50 transition rounded-md"

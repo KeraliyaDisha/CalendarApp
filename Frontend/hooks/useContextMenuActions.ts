@@ -30,19 +30,12 @@ export function useContextMenuActions(refetch: () => void) {
     if (!eventId) return;
     navigator.clipboard
       .writeText(eventId)
-      .then(() => {
-      })
       .catch((err) => console.error("Failed to cut:", err));
-  };
-
-  const handleDuplicateAction = (eventId: string | null) => {
-    if (!eventId) return;
   };
 
   return {
     handleDeleteAction,
     handleCopyAction,
     handleCutAction,
-    handleDuplicateAction,
   };
 }

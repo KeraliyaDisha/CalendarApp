@@ -20,10 +20,12 @@ import { handleEventResize } from "../../hooks/eventResize";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 import { cellStyle } from "../../hooks/cellStyle";
+import { duplicateEvent } from "@/hooks/duplicateEventUtil";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT, CREATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/layout";
 import { usePasteEvent } from "@/hooks/usePasteEvent";
+import { useDuplicateEvent } from "@/hooks/useDuplicateEvent";
 
 interface CalendarProps {
   events: any[];
@@ -67,6 +69,7 @@ export default function Calendar({
     eventId: null as string | null,
   });
   const [copiedEvent, setCopiedEvent] = useState<any>(null);
+  // const [duplicateEvent, setDuplicateEvent] = useState<any>(null)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const actions = useContextMenuActions(refetch);
@@ -142,7 +145,8 @@ export default function Calendar({
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Delete" && selectedEventId) {
         const eventData =
-          localEvents.find((event: any) => event.id === selectedEventId) || null;
+          localEvents.find((event: any) => event.id === selectedEventId) ||
+          null;
         if (eventData) {
           actions.handleDeleteAction(eventData);
         }
@@ -169,6 +173,16 @@ export default function Calendar({
     createEvent,
     refetch,
     setLocalEvents,
+  });
+
+  useDuplicateEvent({
+    selectedEventId,
+    localEvents,
+    createEvent,
+    refetch,
+    setLocalEvents,
+    data,
+    setSelectedEventId,
   });
 
   return (
@@ -239,8 +253,17 @@ export default function Calendar({
               actions.handleCopyAction(selectedEventData);
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
-            onDuplicate={() => {
-              actions.handleDuplicateAction(selectedEventData);
+            onDuplicate={async () => {
+              if (!selectedEventData?.id) return;
+              await duplicateEvent({
+                eventId: selectedEventData.id,
+                localEvents,
+                createEvent,
+                refetch,
+                setLocalEvents,
+                data,
+                setSelectedEventId,
+              });
               setContextMenu((prev) => ({ ...prev, visible: false }));
             }}
             onDelete={() => {
