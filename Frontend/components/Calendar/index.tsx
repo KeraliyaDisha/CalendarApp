@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useMutation } from "@apollo/client";
@@ -154,7 +153,25 @@ export default function Calendar({
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedEventId, localEvents]);
+  }, [actions, selectedEventId, localEvents]);
+
+  useEffect(() => {
+    function handleCutHotkey(e: KeyboardEvent) {
+      if (e.ctrlKey && e.key.toLowerCase() === "x" && selectedEventId) {
+        e.preventDefault();
+        const eventData =
+          localEvents.find((event: any) => event.id === selectedEventId) ||
+          null;
+        if (eventData) {
+          setCopiedEvent(eventData);
+          actions.handleDeleteAction(eventData.id);
+          setSelectedEventId(null);
+        }
+      }
+    }
+    window.addEventListener("keydown", handleCutHotkey);
+    return () => window.removeEventListener("keydown", handleCutHotkey);
+  }, [selectedEventId, localEvents, actions]);
 
   const selectedEventData =
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
@@ -165,6 +182,7 @@ export default function Calendar({
       baseDateClick(info, setFormData, setSelectedEvent);
     }
   };
+
   usePasteEvent({
     copiedEvent,
     selectedDate,
@@ -245,7 +263,7 @@ export default function Calendar({
             refetch={refetch}
             onCut={() => {
               setCopiedEvent(selectedEventData);
-               actions.handleDeleteAction(selectedEventData.id);
+              actions.handleDeleteAction(selectedEventData.id);
             }}
             onCopy={() => {
               setCopiedEvent(selectedEventData);
