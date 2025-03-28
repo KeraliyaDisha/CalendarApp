@@ -69,7 +69,6 @@ export default function Calendar({
     eventId: null as string | null,
   });
   const [copiedEvent, setCopiedEvent] = useState<any>(null);
-  // const [duplicateEvent, setDuplicateEvent] = useState<any>(null)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const actions = useContextMenuActions(refetch);
