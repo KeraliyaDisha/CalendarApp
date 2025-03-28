@@ -147,7 +147,7 @@ export default function Calendar({
           localEvents.find((event: any) => event.id === selectedEventId) ||
           null;
         if (eventData) {
-          actions.handleDeleteAction(eventData);
+          actions.handleDeleteAction(eventData.id);
         }
         setSelectedEventId(null);
       }
@@ -244,8 +244,8 @@ export default function Calendar({
             eventData={selectedEventData}
             refetch={refetch}
             onCut={() => {
-              actions.handleCutAction(selectedEventData);
-              setContextMenu((prev) => ({ ...prev, visible: false }));
+              setCopiedEvent(selectedEventData);
+               actions.handleDeleteAction(selectedEventData.id);
             }}
             onCopy={() => {
               setCopiedEvent(selectedEventData);

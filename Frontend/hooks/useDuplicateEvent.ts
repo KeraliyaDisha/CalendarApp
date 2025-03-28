@@ -22,7 +22,6 @@ export function useDuplicateEvent({
   useEffect(() => {
     const handleDuplicateKey = async (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key.toLowerCase() === "d" && selectedEventId) {
-        // Avoid duplicating when focus is on an input or textarea
         const target = e.target as HTMLElement;
         if (
           target &&

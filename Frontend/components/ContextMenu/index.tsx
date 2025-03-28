@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// ContextMenu.tsx
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Scissors, Copy, Clipboard, Trash2 } from "lucide-react";
 
 interface ContextMenuProps {
   x: number;
   y: number;
-  eventData: any; // replace with your event type if available
+  eventData: any; 
   refetch: () => void;
   onCut: () => void;
   onCopy: () => void;
@@ -51,16 +50,6 @@ export default function ContextMenu({
     await onDelete();
     onClose();
   }, [eventData, onDelete, onClose]);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Delete") {
-        handleDelete();
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleDelete]);
 
   return (
     <div
