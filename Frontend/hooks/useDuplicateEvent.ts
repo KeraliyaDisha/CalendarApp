@@ -24,7 +24,10 @@ export function useDuplicateEvent({
       if (e.ctrlKey && e.key.toLowerCase() === "d" && selectedEventId) {
         // Avoid duplicating when focus is on an input or textarea
         const target = e.target as HTMLElement;
-        if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        if (
+          target &&
+          (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+        ) {
           return;
         }
         e.preventDefault();

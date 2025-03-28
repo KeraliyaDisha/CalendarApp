@@ -12,7 +12,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const SignupForm: React.FC = () => {
-  const [signupMutation, { loading, error }] = useMutation(SIGNUP);
+  const [signupMutation, { , error }] = useMutation(SIGNUP);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const router = useRouter();

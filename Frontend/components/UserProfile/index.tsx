@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/graphql/queries";
+import Loader from "@/app/loading";
 
 interface UserMenuProps {
   onLogout: () => void;
@@ -28,7 +29,7 @@ export default function UserProfileMenu({ onLogout }: UserMenuProps) {
     };
   }, [open]);
 
-  if (loading) return null;
+  if (loading) return <Loader />;
   if (error) return <p>Error loading user data.</p>;
 
   const user = data.user;
@@ -40,9 +41,9 @@ export default function UserProfileMenu({ onLogout }: UserMenuProps) {
         className="flex items-center justify-center w-8 h-8 rounded-full overflow-hidden hover:border-2"
       >
         <Image
-          src="/profile icon.png" 
+          src="/profile icon.png"
           alt="Profile"
-          width={30} 
+          width={30}
           height={30}
           className="w-full h-full rounded-full object-cover"
         />

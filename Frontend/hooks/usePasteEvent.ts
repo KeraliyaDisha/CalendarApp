@@ -20,7 +20,12 @@ export function usePasteEvent({
 }: PasteEventOptions) {
   useEffect(() => {
     const handlePaste = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key.toLowerCase() === "v" && copiedEvent && selectedDate) {
+      if (
+        e.ctrlKey &&
+        e.key.toLowerCase() === "v" &&
+        copiedEvent &&
+        selectedDate
+      ) {
         e.preventDefault();
         const newStart = selectedDate;
         let newEnd = copiedEvent.end;

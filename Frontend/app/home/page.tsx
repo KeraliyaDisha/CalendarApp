@@ -5,18 +5,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { event } from "@/types";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/graphql/queries";
-// import { useRouter } from "next/navigation";
 import Calendar from "../../components/Calendar";
-// import EventList from "../../components/EventList";
 import Form from "../../components/EventForm";
+import Loader from "../loading";
 import { SocketContext } from "@/app/layout";
 
 export default function CalendarPage() {
   const { data, loading, error, refetch } = useQuery(GET_USER);
-  // const router = useRouter();
   const socket = useContext(SocketContext);
 
   const [formData, setFormData] = useState<event>({
+    id: "",
     title: "",
     description: "",
     start: "",
@@ -24,9 +23,8 @@ export default function CalendarPage() {
   });
 
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [setGotoDate] = useState<(date: string | Date) => void>(
-    () => () => {}
-  );
+  const [gotoDate, setGotoDate] = useState<(date: string | Date) => void>(() => () => {});
+
 
   useEffect(() => {
     if (!socket) return;
@@ -53,7 +51,7 @@ export default function CalendarPage() {
     };
   }, [socket, refetch]);
 
-  if (loading) return <>Loading...</>;
+  if (loading) return <Loader />;  
   if (error) return <p className="text-red-500">{error.message}</p>;
 
   const events =
