@@ -17,6 +17,7 @@
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
     "graphql": "^16.10.0",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.474.0",

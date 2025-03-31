@@ -7,6 +7,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/graphql/queries";
 import Calendar from "../../components/Calendar";
 import Form from "../../components/EventForm";
+import MiniCalendar from "@/components/MiniCalendar/MiniCalendar";
 import Loader from "../loading";
 import { SocketContext } from "@/app/ClientProvider";
 
@@ -23,8 +24,9 @@ export default function CalendarPage() {
   });
 
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [gotoDate, setGotoDate] = useState<(date: string | Date) => void>(() => () => {});
-
+  const [gotoDate, setGotoDate] = useState<(date: string | Date) => void>(
+    () => () => {}
+  );
 
   useEffect(() => {
     if (!socket) return;
@@ -51,7 +53,7 @@ export default function CalendarPage() {
     };
   }, [socket, refetch]);
 
-  if (loading) return <Loader />;  
+  if (loading) return <Loader />;
   if (error) return <p className="text-red-500">{error.message}</p>;
 
   const events =
@@ -65,22 +67,21 @@ export default function CalendarPage() {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Left Sidebar (Form & Event List) */}
-      <div className="w-1/4 p-6 h-ful flex flex-col border-r">
-        <Form
-          data={data}
-          selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
-          setFormData={setFormData}
-          formData={formData}
-          refetch={refetch}
-        />
-        {/* <EventList
-          router={router}
-          events={events}
-          gotoDate={gotoDate}
-          refetch={refetch}
-        /> */}
+      <div className="w-1/4 p-4 h-full flex flex-col border-r">
+        <div className=" mt-4 mb-1">
+
+        <MiniCalendar />
+        </div>
+        <div className="flex-1 w-full">
+          <Form
+            data={data}
+            selectedEvent={selectedEvent}
+            setSelectedEvent={setSelectedEvent}
+            setFormData={setFormData}
+            formData={formData}
+            refetch={refetch}
+          />
+        </div>
       </div>
 
       <div className="w-3/4 h-screen p-8">
