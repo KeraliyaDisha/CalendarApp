@@ -21,6 +21,10 @@ import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 import { cellStyle } from "../../hooks/cellStyle";
 import { duplicateEvent } from "@/hooks/duplicateEventUtil";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import {
+  handleEventMouseEnter,
+  handleEventMouseLeave,
+} from "@/hooks/eventTooltip";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT, CREATE_EVENT } from "@/graphql/mutations";
 import { SocketContext } from "@/app/ClientProvider";
@@ -178,7 +182,7 @@ export default function Calendar({
   });
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full overflow-visible">
       {/* Custom Toolbar */}
       <CalendarToolbar
         currentViewLabel={currentViewLabel}
@@ -226,6 +230,9 @@ export default function Calendar({
             handleEventRightClick(info, e)
           );
         }}
+        eventMouseEnter={handleEventMouseEnter}
+        eventMouseLeave={handleEventMouseLeave}
+        
       />
 
       {/* Context Menu */}

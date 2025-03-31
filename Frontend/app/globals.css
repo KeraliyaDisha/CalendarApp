@@ -1,15 +1,19 @@
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
 
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-  body {
-    color: var(--foreground);
-    background: var(--background);
-    font-family: Arial, Helvetica, sans-serif;
-  }
+.fc-view-container {
+  overflow: visible !important;
+  position: relative;
+}
