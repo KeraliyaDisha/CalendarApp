@@ -8,7 +8,7 @@ import { GET_USER } from "@/graphql/queries";
 import Calendar from "../../components/Calendar";
 import Form from "../../components/EventForm";
 import Loader from "../loading";
-import { SocketContext } from "@/app/layout";
+import { SocketContext } from "@/app/ClientProvider";
 
 export default function CalendarPage() {
   const { data, loading, error, refetch } = useQuery(GET_USER);

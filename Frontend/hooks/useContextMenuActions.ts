@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useMutation } from "@apollo/client";
-import { SocketContext } from "@/app/layout";
+import { SocketContext } from "@/app/ClientProvider";
 import { DELETE_EVENT } from "@/graphql/mutations";
 
 export function useContextMenuActions(refetch: () => void) {

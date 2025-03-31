@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { SIGNUP } from "@/graphql/mutations";
+import Cookies from "js-cookie";
 import { signup } from "@/types";
 import { EyeIcon, EyeOffIcon, Calendar } from "lucide-react";
 import Link from "next/link";
@@ -119,7 +119,7 @@ const SignupForm: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700"
+            className="w-full bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition transform hover:scale-105"
             disabled={loading}
           >
             {loading ? "Signing Up..." : "Create Account"}

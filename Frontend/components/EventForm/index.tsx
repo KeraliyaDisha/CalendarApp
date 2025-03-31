@@ -8,7 +8,7 @@ import {
   UPDATE_EVENT,
 } from "@/graphql/mutations";
 import { useContext } from "react";
-import { SocketContext } from "@/app/layout"; 
+import { SocketContext } from "@/app/ClientProvider"; 
 
 export default function Form({
   data,

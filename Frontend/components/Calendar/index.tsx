@@ -23,7 +23,7 @@ import { duplicateEvent } from "@/hooks/duplicateEventUtil";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { festivals } from "@/festival";
 import { UPDATE_EVENT, CREATE_EVENT } from "@/graphql/mutations";
-import { SocketContext } from "@/app/layout";
+import { SocketContext } from "@/app/ClientProvider";
 import { usePasteEvent } from "@/hooks/usePasteEvent";
 import { useDuplicateEvent } from "@/hooks/useDuplicateEvent";
 
