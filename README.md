@@ -37,12 +37,12 @@ This is a calendar application inspired by Notion, where users can manage their 
 ## Tech Stack
 
 - **Frontend**: 
-  - React.js
+  - Next.js
+  - App Router(for routing)
   - TypeScript
   - Tailwind CSS
   - Apollo Client (for GraphQL)
   - WebSocket (for real-time updates)
-  - React Router (for routing)
 - **Backend**:
   - GraphQL API (Node.js, Express)
   - WebSocket Server (for real-time event updates)
@@ -56,5 +56,5 @@ Follow these steps to set up the project locally:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/calendar-app.git
-cd calendar-app
+git clone https://github.com/KeraliyaDisha/CalendarApp.git
+cd CalendarApp
