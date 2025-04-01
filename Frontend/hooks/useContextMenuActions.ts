@@ -22,7 +22,6 @@ export function useContextMenuActions(refetch: () => void) {
     if (!eventId) return;
     navigator.clipboard
       .writeText(eventId)
-      .then(() => console.log("Copied event:", eventId))
       .catch((err) => console.error("Failed to copy:", err));
   };
 

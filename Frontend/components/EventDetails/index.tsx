@@ -6,7 +6,6 @@ export default function EventDetails({ events, gotoDate }: any) {
   const [hoveredEvent, setHoveredEvent] = useState<any>(null);
 
   function handleListItemClick(event: any) {
-    console.log("Navigating to event:", event);
     const eventDate = new Date(event.start).toISOString().split("T")[0];
     gotoDate(eventDate);
   }

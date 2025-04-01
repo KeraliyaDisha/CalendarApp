@@ -235,7 +235,7 @@ export default function Calendar({
           return "";
         }}
         timeZone="UTC"
-        height="98%"
+        height="95%"
         selectable
         editable
         eventResizableFromStart
