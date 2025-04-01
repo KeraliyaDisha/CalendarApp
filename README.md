@@ -33,7 +33,3 @@ This calendar application, inspired by Notion, enables users to manage personal 
 ```bash
 git clone https://github.com/KeraliyaDisha/CalendarApp.git
 cd CalendarApp
-
-### 2.Install dependencies
-```bash
-npm install
