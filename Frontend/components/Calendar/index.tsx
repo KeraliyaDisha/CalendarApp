@@ -8,6 +8,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import multiMonthPlugin from "@fullcalendar/multimonth";
+import { format } from "date-fns";
 import ContextMenu from "../ContextMenu";
 import { CalendarToolbar } from "../CalenderToolbar";
 import { handleEventLogout } from "@/hooks/logout";
@@ -34,14 +35,18 @@ interface CalendarProps {
   setFormData: (data: any) => void;
   setSelectedEvent: (event: any) => void;
   setGotoDate: (fn: (date: string | Date) => void) => void;
+  selectedDate: Date | null;
+  setSelectedDate: (date: Date | null) => void;
 }
 
 export default function Calendar({
   events,
+  selectedDate,
   data,
   refetch,
   setFormData,
   setSelectedEvent,
+  setSelectedDate,
   setGotoDate,
 }: CalendarProps) {
   const router = useRouter();
@@ -69,7 +74,6 @@ export default function Calendar({
     eventId: null as string | null,
   });
   const [copiedEvent, setCopiedEvent] = useState<any>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const actions = useContextMenuActions(refetch);
   const handleLogout = () => {
@@ -144,7 +148,7 @@ export default function Calendar({
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
 
   const handleDateClick = (info: any) => {
-    setSelectedDate(new Date(info.dateStr));
+    setTimeout(() => setSelectedDate(null), 300);
     if (!copiedEvent) {
       baseDateClick(info, setFormData, setSelectedEvent);
     }
@@ -206,6 +210,16 @@ export default function Calendar({
         datesSet={handleDatesSet}
         initialView="dayGridMonth"
         dayCellDidMount={(info) => cellStyle(info)}
+        dayCellClassNames={(arg) => {
+          if (
+            selectedDate &&
+            format(arg.date, "yyyy-MM-dd") ===
+              format(selectedDate, "yyyy-MM-dd")
+          ) {
+            return "selected-cell";
+          }
+          return "";
+        }}
         timeZone="UTC"
         height="98%"
         selectable

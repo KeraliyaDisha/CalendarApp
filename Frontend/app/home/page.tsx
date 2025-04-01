@@ -24,9 +24,15 @@ export default function CalendarPage() {
   });
 
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [gotoDate, setGotoDate] = useState<(date: string | Date) => void>(
-    () => () => {}
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [gotoDate, setGotoDate] = useState<(date: string | Date) => void>(() => () => {});
+  
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    setTimeout(() => {
+      setSelectedDate(null);
+    }, 2000);
+  };
 
   useEffect(() => {
     if (!socket) return;
@@ -68,9 +74,11 @@ export default function CalendarPage() {
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="w-1/4 p-4 h-full flex flex-col border-r">
-        <div className=" mt-4 mb-1">
-
-        <MiniCalendar />
+        <div className="mt-4 mb-1">
+          <MiniCalendar 
+            gotoDate={gotoDate} 
+            onDateSelect={handleDateSelect} 
+          />
         </div>
         <div className="flex-1 w-full">
           <Form
@@ -92,6 +100,8 @@ export default function CalendarPage() {
           setFormData={setFormData}
           setSelectedEvent={setSelectedEvent}
           setGotoDate={setGotoDate}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
         />
       </div>
     </div>

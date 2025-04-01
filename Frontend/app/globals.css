@@ -17,3 +17,12 @@ body {
   overflow: visible !important;
   position: relative;
 }
+
+.fc-daygrid-day {
+  background-color: white; 
+  transition: background-color 1.5s ease-out;
+}
+
+.selected-cell {
+  background-color: rgba(207, 13, 13, 0.697); 
+}

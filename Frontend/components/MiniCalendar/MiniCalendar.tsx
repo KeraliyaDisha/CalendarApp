@@ -2,21 +2,43 @@
 import { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 
-export default function MiniCalendar() {
+interface MiniCalendarProps {
+  gotoDate: (date: string | Date) => void;
+  onDateSelect: (date: Date) => void;
+}
+
+export default function MiniCalendar({
+  gotoDate,
+  onDateSelect,
+}: MiniCalendarProps) {
   const [calendarRef, setCalendarRef] = useState<any>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const updateDate = (newDate: Date) => {
-    setCurrentDate(new Date(newDate)); // Ensures a new Date object is used
+    setCurrentDate(new Date(newDate));
     if (calendarRef) calendarRef.getApi().gotoDate(newDate);
+    onDateSelect(newDate);
   };
 
-  const handlePrev = () => updateDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-  const handleNext = () => updateDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  const handlePrev = () =>
+    updateDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+    );
+  const handleNext = () =>
+    updateDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+    );
   const handleToday = () => updateDate(new Date());
+
+  const handleDateClick = (info: any) => {
+    const newDate = new Date(info.dateStr);
+    gotoDate(newDate);
+    onDateSelect(newDate);
+  };
 
   return (
     <div className="w-full">
@@ -27,13 +49,22 @@ export default function MiniCalendar() {
         </span>
 
         <div className="flex gap-1">
-          <button onClick={handleToday} className="p-1 rounded-sm hover:bg-gray-200">
+          <button
+            onClick={handleToday}
+            className="p-1 rounded-sm hover:bg-gray-200"
+          >
             <CalendarDays className="w-3.5 h-3.5" />
           </button>
-          <button onClick={handlePrev} className="p-1 rounded-sm hover:bg-gray-200">
+          <button
+            onClick={handlePrev}
+            className="p-1 rounded-sm hover:bg-gray-200"
+          >
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
-          <button onClick={handleNext} className="p-1 rounded-sm hover:bg-gray-200">
+          <button
+            onClick={handleNext}
+            className="p-1 rounded-sm hover:bg-gray-200"
+          >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -41,7 +72,7 @@ export default function MiniCalendar() {
 
       {/* Mini Calendar */}
       <FullCalendar
-        plugins={[dayGridPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         headerToolbar={false}
         height={250}
@@ -52,8 +83,11 @@ export default function MiniCalendar() {
         dayMaxEvents={true}
         initialDate={currentDate}
         nowIndicator={true}
+        dateClick={handleDateClick}
         dayHeaderContent={(arg) => (
-          <div className="text-[12px] font-semibold text-gray-900">{arg.text}</div> 
+          <div className="text-[12px] font-semibold text-gray-900">
+            {arg.text}
+          </div>
         )}
         dayCellContent={(arg) => (
           <div className="text-[12px] text-gray-800">{arg.date.getDate()}</div>
