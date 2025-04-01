@@ -37,6 +37,9 @@ interface CalendarProps {
   setGotoDate: (fn: (date: string | Date) => void) => void;
   selectedDate: Date | null;
   setSelectedDate: (date: Date | null) => void;
+  sidebarOpen: boolean;
+  isSelectedFromMiniCalendar: boolean;
+  setIsSelectedFromMiniCalendar: (isSelected: boolean) => void;
 }
 
 export default function Calendar({
@@ -48,6 +51,9 @@ export default function Calendar({
   setSelectedEvent,
   setSelectedDate,
   setGotoDate,
+  sidebarOpen,
+  isSelectedFromMiniCalendar,
+  setIsSelectedFromMiniCalendar,
 }: CalendarProps) {
   const router = useRouter();
   const calendarRef = useRef<FullCalendar | null>(null);
@@ -118,6 +124,12 @@ export default function Calendar({
     };
   }, [socket, refetch]);
 
+  useEffect(() => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().updateSize();
+    }
+  }, [sidebarOpen]);
+
   const handleDatesSet = (arg: any) => {
     setCurrentTitle(arg.view.title);
     const viewLabels: { [key: string]: string } = {
@@ -148,7 +160,8 @@ export default function Calendar({
     localEvents.find((event: any) => event.id === contextMenu.eventId) || null;
 
   const handleDateClick = (info: any) => {
-    setTimeout(() => setSelectedDate(null), 300);
+    setSelectedDate(new Date(info.date));
+    setIsSelectedFromMiniCalendar(false);
     if (!copiedEvent) {
       baseDateClick(info, setFormData, setSelectedEvent);
     }
@@ -212,6 +225,7 @@ export default function Calendar({
         dayCellDidMount={(info) => cellStyle(info)}
         dayCellClassNames={(arg) => {
           if (
+            isSelectedFromMiniCalendar &&
             selectedDate &&
             format(arg.date, "yyyy-MM-dd") ===
               format(selectedDate, "yyyy-MM-dd")

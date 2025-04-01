@@ -21,7 +21,6 @@ export default function MiniCalendar({
   const updateDate = (newDate: Date) => {
     setCurrentDate(new Date(newDate));
     if (calendarRef) calendarRef.getApi().gotoDate(newDate);
-    onDateSelect(newDate);
   };
 
   const handlePrev = () =>
@@ -42,7 +41,6 @@ export default function MiniCalendar({
 
   return (
     <div className="w-full">
-      {/* Header Controls */}
       <div className="flex justify-between items-center mb-1">
         <span className="text-xs font-semibold text-gray-800">
           {format(currentDate, "MMMM yyyy")}

@@ -25,7 +25,7 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
   onLogout,
 }) => {
   return (
-    <div className="flex items-center justify-between mb-0">
+    <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         {/* Dropdown */}
         <div className="relative">
